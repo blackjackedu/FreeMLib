@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>我的预约单</title>
+	<link rel="stylesheet" href="css/jquery.mobile.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile.js"></script>
+	<script type="text/javascript" src="js/service.js"></script>
+	<script type="text/javascript" src="js/mjs.js"></script>
+	<script>	
+	
+	
+	var data;
+	//使用pageinit事件，用pagebeforeshow会使click触发两次
+	$(document).on("pageinit","#pList",function(){
+		showLoader();		
+		getMyReserve(handleList);
+	});
+	function handleList(da)
+	{
+		hideLoader();
+		//data=eval(data);
+		data = eval('(' + da + ')');
+		//未登录
+		//alert(data);
+		if(!data||data.status=="0")
+		{
+			location.href='login.html?back=order.html';
+		}
+		ldb=new localDB();
+		$('#txtTitle').html('预约清单['+ldb.getUserName()+']');
+		var str='';
+		if(data.length==0)
+		{
+			str="<div>暂无预约记录</div>";
+		}else
+		{
+			for(var i=0;i<data.length;i++)
+			{
+				str+="<hr /><div><b>书        名:<a  rel='external' href='search.html?qstr="+data[i].href+"' >"+data[i].title+"</a></b><br />登 录 号:"+data[i].bno+"<br />预约日期："+data[i].data2+"<br/>状        态:"+data[i].data1;
+				if(data[i].xu=="") str+="<br/><button id="+i+" class='ui-btn ui-corner-all ui-btn-inline' style='background:#4F81BD' href=# >取消</button>";
+				else str+="<br/>"+data[i].xu;
+				str+="</div>";
+			}
+		}
+		$("#divResult").html(str);
+		$("#divResult").trigger("create");
+		
+		$('#divResult button').click(function(){
+			selid=$(this).attr("id");
+			//alert(data[selid].resvrecName);
+			showLoader();
+			$(this).attr('disabled', 'disabled');
+			//alert("取消预约成功");
+			cancReserve({resvrecName:data[selid].resvrecName,resvrecValue:data[selid].resvrecValue,resvrow:data.length},function(){
+		getMyReserve(handleList);});
+		});
+			
+	}
+	
+	
+    </script>
+</head>
+
+<body>
+
+<div data-role="page" id="pList" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1 id="txtTitle">预约清单</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<div id="divResult"></ul>
+    </div>
+        
+
+	</div><!-- /content -->
+
+	
+</div><!-- /pList -->
+
+
+</body>
+</html>

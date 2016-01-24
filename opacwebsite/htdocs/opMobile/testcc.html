@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>jQuery.getJSON demo</title>
+<style>
+img {
+height: 100px;
+float: left;
+}
+</style>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+</head>
+<body>
+<div id="images"></div>
+<script>
+/*(function() {
+var flickerAPI = "http://192.168.4.185/app/getCC.php?jsoncallback=?";
+$.getJSON(flickerAPI, {tags: "mount rainier",tagmode: "any",format: "json"}).done(function(data){
+	alert(data);
+});
+})();*/
+$.ajax({
+type: "get",
+url: "http://192.168.4.185/app/getCC.php",
+crossDomain :true,
+ dataType:"jsonp",
+ jsonp: 'jsonpCallback',
+ jsonpCallback:'jsonpCallback',
+success: function(data, textStatus){
+	//alert(data);
+	$("#txt").text(data.ajax); 
+}
+});
+</script>
+<div id="txt"></div>
+</body>
+</html>

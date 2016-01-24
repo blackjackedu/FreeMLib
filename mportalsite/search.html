@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>馆藏检索</title>
+	<link rel="stylesheet" href="css/jquery.mobile.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile.js"></script>
+	<script type="text/javascript" src="js/service.js"></script>
+	<script type="text/javascript" src="js/mjs.js"></script>
+	<script>	
+	var resultData;
+	var qStr=null;
+	$(document).ready(function(){
+		qStr=getURLParameter(window.location,"qstr");
+		if(qStr!=null && qStr!="")
+		{
+			//进入详细页
+			$.mobile.changePage("#pDetail");
+		}else
+		{
+			$.mobile.changePage("#pList");
+		}
+	})
+
+	//使用pageinit事件，用pagebeforeshow会使click触发两次
+	$(document).on("pageinit","#pList",function(){
+		$('#btnSubmit').click(function(){
+			//alert($("#txtKey").val());
+			showLoader();
+			getSearchList($("#txtKey").val(),handleSearchList);
+		});
+	});
+	function handleSearchList(data)
+	{
+		hideLoader();
+		//data=eval(data);
+		resultData = eval('(' + data + ')');
+		var str='';
+		if(resultData.length==0)
+		{
+			$("#lsNews").html("<li>无记录<li>");
+			$("#lsNews").listview("refresh");
+		}else
+		{
+			for(var i=0;i<resultData.length;i++)
+			{
+				str+="<li><a  id='"+i+"'>("+resultData[i].classno+") "+resultData[i].title+"</a></li>";
+			}
+			$("#lsNews").html(str);
+			$("#lsNews").listview("refresh");
+			$('#lsNews a').click(function(){
+				selid=$(this).attr("id");
+				qStr=resultData[selid].href;
+				$.mobile.changePage("#pDetail");
+			});
+		}	
+	}
+	var selid;
+	$(document).on("pagebeforeshow","#pDetail",function(){ 
+  		$("#divDetail").html("");
+		$("#divResv").html("");
+		if(qStr!=null && qStr!="")
+		{
+			showLoader();
+			getSearchDetail(qStr,handleDetail);
+		}
+	});
+	var dda;
+	function handleDetail(da)
+	{
+		hideLoader();
+		dda = eval('(' + da + ')');
+		if(dda)
+		{
+			var str=dda.title+"<br>"+dda.t;
+			if(dda.resv&&dda.resv!="")
+			{
+				str+='<br><button id="btnReserve"  class="ui-btn ui-corner-all ui-btn-inline" href="#" style="background:#4F81BD">预约</button>';
+				
+			}
+			$("#divDetail").html(str);
+			$("#divDetail").trigger("create");
+			$("#btnReserve").click(function(){
+				//alert("Reserve");
+				$(this).attr('disabled', 'disabled');
+				showLoader();
+				reserve(dda.resv,handleReserve);
+			});
+		}
+	}
+	function handleReserve(da)
+	{
+		hideLoader();
+		$("#btnReserve").removeAttr('disabled');
+		rda = eval('(' + da + ')');
+		if(rda)
+		{
+			mess=rda.message;
+			
+			if(rda.message=="未登录")
+			{
+				mess+="<br/><a href='login.html' rel='external'>登录</a>";
+			}else if(rda.message=="预约成功")
+			{
+				mess+="<br/><a href='order.html' rel='external'>查看预约清单</a>";
+			}
+			$("#divResv").html(mess);
+			$("#divResv").trigger("create");
+		}
+		
+	}
+	
+    </script>
+</head>
+
+<body>
+
+<div data-role="page" id="pList" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>馆藏检索</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<input name="txtKey" id="txtKey" value="" placeholder="请输入关键词..." type="search">
+		<button id="btnSubmit" class="ui-btn ui-corner-all" style="background:#4F81BD">提交</button>
+		<br/>
+		<ul id="lsNews" data-role="listview"></ul>
+    </div>
+        
+
+	</div><!-- /content -->
+
+	
+</div><!-- /pList -->
+
+
+<!-- Start of second page: #Three -->
+<div data-role="page" id="pDetail" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>详细页</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<div id="divDetail">详细页</div>
+		<div id="divResv"></div>
+		
+	</div><!-- /content -->
+
+</div><!-- /pDetail -->
+
+
+
+</body>
+</html>

@@ -1,0 +1,45 @@
+<html>
+<head>
+<script type="text/javascript">
+function jsLoad(jId, url, callBack)
+{
+    var version = 0;
+    if (navigator.appName.indexOf('Internet Explorer') != -1) {
+        var temp = navigator.appVersion.split('MSIE');
+        version = parseInt(temp[1]);
+    }
+
+    var js = document.getElementById(jId);
+    js.setAttribute('type', 'text/javascript');
+    js.setAttribute('src', url);
+    js.onload = js.onreadystatechange = function()
+    {
+        if (js.readyState && version > 0) {
+            if (version <= 6) {
+                if (/complete/i.test(js.readyState)) {
+                    return callBack();
+                }
+            } else {
+                if (/loaded/i.test(js.readyState)) {
+                    return callBack();
+                }
+            }
+        } else {
+            return callBack();
+        }
+    }
+}
+function myecho()
+{
+    alert(str);
+}
+</script>
+</head>
+<body>
+<script id="myid"></script>
+<script>
+var url = 'http://192.168.4.170/search/getLoanRecord';
+jsLoad('myid', url, myecho);
+</script>
+<body>
+</html>

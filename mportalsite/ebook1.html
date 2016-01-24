@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>数字阅读</title>
+	<link rel="stylesheet" href="css/jquery.mobile.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile.js"></script>
+	<script type="text/javascript" src="js/service.js"></script>
+	<script>	
+	
+	
+	var data;
+	//使用pageinit事件，用pagebeforeshow会使click触发两次
+	$(document).on("pageinit","#pList",function(){
+		getEbook1List(handleList);
+	});
+	function handleList(da)
+	{
+		//data=eval(data);
+		data = eval('(' + da + ')');
+		//data=data;
+		var str='';
+		for(var i=0;i<data.length;i++)
+		{
+			if(data[i].category=="C")
+			{
+				str+='<li style="background:#4F81BD" data-role="list-divider">'+data[i].title+'</li>';
+			}else str+="<li><a  id='"+i+"'>"+data[i].title+"</a></li>";
+		}
+		$("#lsNews").html(str);
+		$("#lsNews").listview("refresh");
+		$('#lsNews a').click(function(){
+			selid=$(this).attr("id");
+			$("#divContent").html('');
+		$("#divContent").trigger("create");
+			$.mobile.changePage("#pContent");
+		});
+			
+	}
+	var selid;
+	$(document).on("pagebeforeshow","#pContent",function(){ 
+  		
+		if(data[selid])
+		{
+			//$("#divNewDetail").html(news[selid].title);
+			getEbook1Content(data[selid].id,handleContent);
+		}
+	});
+	
+	var dataContent;
+	var sedata2;
+	function handleContent(da)
+	{
+		//$("#divContent").html(data);
+		dataContent = eval('(' + da + ')');
+		//data=data;
+		var str='';
+		for(var i=0;i<dataContent.length;i++)
+		{
+			str+="<li><a  id='"+i+"'>"+dataContent[i].title+"</a></li>";
+		}
+		$("#lsContent").html(str);
+		$("#lsContent").listview("refresh");
+		$('#lsContent a').click(function(){
+			sedata2=$(this).attr("id");
+			$.mobile.changePage("#pDetail");
+		});
+	}
+	
+	$(document).on("pagebeforeshow","#pDetail",function(){ 
+  		$("#divDetail").html('');
+		$("#divDetail").trigger("create");
+		if(dataContent[sedata2])
+		{
+			getEbook1Detail(dataContent[sedata2].id,handleDetail);
+		}
+	});
+	function handleDetail(da)
+	{
+		$("#divDetail").html(da);
+		$("#divDetail").trigger("create");
+	}
+	
+    </script>
+</head>
+
+<body>
+
+<div data-role="page" id="pList" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>数字阅读</h1>
+	</div><!-- /header -->
+	
+	<div role="main" class="ui-content">
+		<ul id="lsNews" data-role="listview" data-inset="true" data-divider-theme="a"></ul>
+    </div>
+        
+	<div><a href="imgBook.html">测试（图像版）</a></div>
+	</div><!-- /content -->
+
+	
+</div><!-- /pList -->
+
+
+<!-- Start of second page: #Three -->
+<div data-role="page" id="pContent" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>目录</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<ul id="lsContent" data-role="listview" ></ul>
+	</div><!-- /content -->
+
+</div><!-- /pContent -->
+
+<!-- Start of second page: #Three -->
+<div data-role="page" id="pDetail" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>内容页</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<div id="divDetail">目录页</div>
+	</div><!-- /content -->
+
+</div><!-- /pContent -->
+
+
+</body>
+</html>

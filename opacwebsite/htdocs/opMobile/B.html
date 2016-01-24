@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>广西建设职业技术学院移动图书馆</title>
+<link rel="stylesheet" href="js/jq/jquery.mobile-1.0a2.min.css">
+<style type="text/css">
+.banner {
+	background-image: url(img/logo.png);
+}
+</style>
+<script src="js/jq/jquery-1.4.4.min.js"></script>
+<script src="js/jq/jquery.mobile-1.0a2.min.js"></script>
+
+<script>
+var queryRS;
+</script>
+
+</head>
+<body>
+
+<!-- Page starts here -->
+<div data-role="page" data-theme="b" id="page1" data-add-back-btn="true">
+  <div data-role="header" id="hdrMain" name="hdrMain">
+    <h1>电子资源</h1>
+  </div>
+  <div data-role="content" id="contentMain" name="contentMain">
+  <form>
+  <input name="password" id="search" value="" placeholder="Placeholder text..." type="search"><a id="btnQuery" href="#" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="b">检索</a>
+    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+        <input name="radio-choice-b" id="radio-choice-c" value="book" checked="checked" type="radio">
+        <label for="radio-choice-c">图书</label>
+        <input name="radio-choice-b" id="radio-choice-d" value="journal" type="radio">
+        <label for="radio-choice-d">期刊</label>
+         <input name="radio-choice-b" id="radio-choice-a" value="newspaper" type="radio">
+        <label for="radio-choice-a">报纸</label>
+        <input name="radio-choice-b" id="radio-choice-e" value="video" type="radio">
+        <label for="radio-choice-e">视频</label>
+	</fieldset>
+    </form>
+    <div id="divResult"></div>
+  </div>
+  <script>
+	
+    $('#btnQuery').click(function() {
+        //alert($("input[name='radio-choice-b']:checked").val());
+		$.get("http://192.168.4.170/search/getCX",{word:$('#search').val(),type:$("input[name='radio-choice-b']:checked").val()},function(data){
+			var type=$("input[name='radio-choice-b']:checked").val();
+			if(type=="book")
+			{
+				var data2 = eval('(' + data + ')');
+				//var data2=JSON.parse('(' + data + ')');
+				//alert(data.results.length);
+				queryRS=data2.results;				
+				html="<div id='pCont'>";
+				for(var i=0;i<queryRS.length;i++)
+				{
+					html+="<p><table><tr><td rowspan='4'><img src='"+queryRS[i].coverurl+"'></td><td>书名</td><td><a id='aa_"+i+"' href='#pDetail'>"+queryRS[i].title+"</a></td></tr><tr><td>作者</td><td>"+queryRS[i].author+"</td></tr><tr><td>出版日期</td><td>"+queryRS[i].year+"</td></tr><tr><td>出版社</td><td>"+queryRS[i].publisher+"</td></tr></table></p>";
+				}
+				html+="</div>";
+				$("#divResult").text('');
+				$("#divResult").append(html);
+				//$("#divNews").html(data);
+				$("#pCont a").bind("click",function()
+				{
+					var value = $( this ).attr( 'id' );
+					var arr=value.split("_");
+					id=parseInt(arr[1]);
+					
+					var html="<h1>"+queryRS[id].title+"</h1>";
+					
+					html+="<p><table><tr><td rowspan='4'><img src='"+queryRS[id].coverurl+"'></td><td>作者</td><td>"+queryRS[id].author+"</td></tr><tr><td>出版日期</td><td>"+queryRS[id].author+"</td></tr><tr><td>出版社</td><td>"+queryRS[id].year+"</td></tr><tr><td>ISBN</td><td>"+queryRS[id].isbn+"</td></tr></table></p>";
+					
+					$("#divDetailIntro").text('');
+					$("#divDetailIntro").append("<p>内容提要:<br/>"+queryRS[id].introduce+"</p>");
+					$("#divDetail").text('');
+					$("#divDetail").append(html);
+				});
+			}else if(type=="newspaper")
+			{
+				var data2 = eval('(' + data + ')');
+				queryRS=data2.results;				
+				html="<div id='pCont'>";
+				for(var i=0;i<queryRS.length;i++)
+				{
+					html+="<p><table><tr><td rowspan='4'><img src='"+queryRS[i].coverurl+"'></td><td>书名</td><td><a id='aa_"+i+"' href='#pDetail'>"+queryRS[i].title+"</a></td></tr><tr><td>作者</td><td>"+queryRS[i].author+"</td></tr><tr><td>出版日期</td><td>"+queryRS[i].year+"</td></tr><tr><td>出版社</td><td>"+queryRS[i].publisher+"</td></tr></table></p>";
+				}
+				html+="</div>";
+				$("#divResult").text('');
+				$("#divResult").append(html);
+				$("#pCont a").bind("click",function()
+				{
+					var value = $( this ).attr( 'id' );
+					var arr=value.split("_");
+					id=parseInt(arr[1]);
+					
+					$.get("http://192.168.4.170/search/getNP",{readerurl:queryRS[id].readerurl},function(data2){
+						$("#divDetail").text('');
+						$("#divDetail").append(data2);
+					});
+					
+					
+					
+				});
+			}
+			
+		});
+					
+		
+   
+	
+	
+	});
+
+</script>
+</div>
+
+
+<div data-role="page" data-theme="b" id="pDetail" data-add-back-btn="true">
+  <div data-role="header">
+    <h1 id="hTitle">详页面细</h1>
+  </div>
+  <div data-role="content">
+  		<div id="divDetail" data-role="listview" data-inset="true"> </div>
+        <p><a href=# data-role="button" data-mini="true" data-inline="true" data-theme="b">阅读全文</a><a href=# data-role="button" data-mini="true" data-inline="true" data-theme="b">放入书房</a><a href=# data-role="button" data-mini="true" data-inline="true" data-theme="b">文献传递</a><a href=# data-role="button" data-mini="true" data-inline="true" data-theme="b">全国馆藏</a></p>
+        <p id="divDetailIntro" >
+        </p>
+  </div>
+ </div>
+</body>
+</html>

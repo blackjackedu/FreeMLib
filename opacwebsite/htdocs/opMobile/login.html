@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>广西建设职业技术学院移动图书馆</title>
+<link rel="stylesheet" href="js/jq/jquery.mobile-1.0a2.min.css">
+
+<script src="js/jq/jquery-1.4.4.min.js"></script>
+<script src="js/json2.js"></script>
+<script src="js/jq/jquery.mobile-1.0a2.min.js"></script>
+<script type="text/javascript">
+	 jQuery(document).ready(function() {
+	 	//输入事件
+	 	$("input[id]").bind("focus",function () { 
+		if($(this).attr("id")=='username'||$(this).attr("id")=='password')
+	 	$(this).attr("value",""); 
+	 	}); 
+	 	//提交
+	 	$("#submit").bind("click", function() {
+			  if (valid()) {
+			    $.ajax({
+				   type: "GET",
+				   url: "http://192.168.4.170/search/login1",
+				   data: {un:$("#un").val(),pw:$("#pw").val()},
+				   crossDomain :true,
+					dataType:"jsonp",
+					jsonp: 'jsonpCallback',
+					jsonpCallback:'jsonpCallback',
+				   success: function(data){
+					 //var rs=data.trim();
+					 var rs=data.message;
+					 if(rs=="ok"){
+				     	window.location="index.html";
+				     }else{
+				     	$("#divLog").text(rs);
+				     }
+				     
+				   }
+				}); 
+			  }
+			});
+		});
+		//输入信息验证
+		function valid(){
+			if($("#username").attr("value")==''||$("#password").attr("value")=='')
+			{
+				$.mobile.changePage("content/loginfalse.html","slidedown", true, true);
+				return false;			
+			} 
+			return true;
+		};
+	</script>
+</head>
+<body>
+
+<!-- Page starts here -->
+<div data-role="page" data-theme="b" id="page1">
+  <div data-role="header" id="hdrMain" name="hdrMain" data-nobackbtn="true">
+    <h1>广西建设职业技术学院移动图书馆</h1>
+  </div>
+  <div data-role="content">  	
+  		<form id="form1" method="post" >
+        	<div data-role="fieldcontain">
+            	<label for="name">用户名：</label>
+	    		<input type="text" name="un" id="un" value="用户名"/>
+            </div>
+            <div data-role="fieldcontain">
+            	<label for="password">密码：</label>
+	    		<input type="password" name="pw" id="pw" value=""/>
+		    </div>
+            <div data-role="fieldcontain">
+            	<label id="divLog" ></label>
+            	<a data-role="button" id="submit" data-theme="b">登录</a>
+            </div>
+	    </form>
+
+    
+  </div>
+  <!-- contentMain -->
+</body>
+</html>

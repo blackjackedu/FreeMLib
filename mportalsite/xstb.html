@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>新书通报</title>
+	<link rel="stylesheet" href="css/jquery.mobile.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile.js"></script>
+	<script type="text/javascript" src="js/service.js"></script>
+	<script type="text/javascript" src="js/mjs.js"></script>
+	<script>	
+	var resultData;
+	var qStr=null;
+	$(document).ready(function(){
+		qStr=getURLParameter(window.location,"qstr");
+		if(qStr!=null && qStr!="")
+		{
+			//进入详细页
+			$.mobile.changePage("#pDetail");
+		}else
+		{
+			$.mobile.changePage("#pList");
+		}
+	})
+
+	//使用pageinit事件，用pagebeforeshow会使click触发两次
+	$(document).on("pageinit","#pList",function(){
+		$('#ls1 a').click(function(){
+			var pp=$(this).attr("alt");
+			pp=pp.split(",");
+			var m=pp[0];
+			var c=pp[1];
+			if(c==null||c==""||m==null||m=="")return;
+			showLoader();
+			getXSTBList({sdate:m,cclass:c},handleSearchList);
+		});
+		$('#btnSubmit').click(function(){
+			var m=$("input[name='rbMonth']:checked").val();
+			var c=$("#selClass").val();
+			if(c==null||c==""||m==null||m=="")return;
+			
+			//alert(c+m);
+			showLoader();
+			getXSTBList({sdate:m,cclass:c},handleSearchList);
+		});
+	});
+	function handleSearchList(data)
+	{
+		hideLoader();
+		//data=eval(data);
+		resultData = eval('(' + data + ')');
+		var str='';
+		$('#divOne').collapsible("collapse");
+		$('#divTwo').collapsible("collapse");
+		if(resultData.length==0)
+		{
+			$("#lsNews").html("<li>无记录<li>");
+			$("#lsNews").listview("refresh");
+		}else
+		{
+			for(var i=0;i<resultData.length;i++)
+			{
+				str+="<li><a  id='"+i+"'>("+resultData[i].classno+") "+resultData[i].title+"</a></li>";
+			}
+			$("#lsNews").html(str);
+			$("#lsNews").listview("refresh");
+			$('#lsNews a').click(function(){
+				selid=$(this).attr("id");
+				qStr=resultData[selid].href;
+				$.mobile.changePage("#pDetail");
+			});
+			//var scroll_offset = $("#divScroll").offset(); 
+			//$("body,html").animate({scrollTop:scroll_offset.top},0);			
+		}	
+	}
+	var selid;
+	$(document).on("pagebeforeshow","#pDetail",function(){ 
+  		$("#divDetail").html("");
+		$("#divResv").html("");
+		if(qStr!=null && qStr!="")
+		{
+			showLoader();
+			getSearchDetail(qStr,handleDetail);
+		}
+	});
+	var dda;
+	function handleDetail(da)
+	{
+		hideLoader();
+		dda = eval('(' + da + ')');
+		if(dda)
+		{
+			var str=dda.title+"<br>"+dda.t;
+			if(dda.resv&&dda.resv!="")
+			{
+				str+='<br><button id="btnReserve"  class="ui-btn ui-corner-all ui-btn-inline" href="#" style="background:#4F81BD">预约</button>';
+				
+			}
+			$("#divDetail").html(str);
+			$("#divDetail").trigger("create");
+			$("#btnReserve").click(function(){
+				//alert("Reserve");
+				$(this).attr('disabled', 'disabled');
+				showLoader();
+				reserve(dda.resv,handleReserve);
+			});
+		}
+	}
+	function handleReserve(da)
+	{
+		hideLoader();
+		$("#btnReserve").removeAttr('disabled');
+		rda = eval('(' + da + ')');
+		if(rda)
+		{
+			mess=rda.message;
+			
+			if(rda.message=="未登录")
+			{
+				mess+="<br/><a href='login.html' rel='external'>登录</a>";
+			}else if(rda.message=="预约成功")
+			{
+				mess+="<br/><a href='order.html' rel='external'>查看预约清单</a>";
+			}
+			$("#divResv").html(mess);
+			$("#divResv").trigger("create");
+		}
+		
+	}
+	
+    </script>
+</head>
+
+<body>
+
+<div data-role="page" id="pList" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>新书通报</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<div id="divOne" data-role="collapsible" data-inset="false">
+			<h3>2014第一期（1月-2月）</h3>
+			<ul id="ls1" data-role="listview">
+				<li><a href="#" alt="2014/1/1-2014/2/28,a">A 马克思主义、列宁主义、毛泽东思想、邓小平理论(2)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,b">B 哲学、宗教(1)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,d">D 政治、法律(7)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,e">E 军事(7)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,f">F 经济(2)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,g">G 文化、科学、教育、体育(1)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,h">H 语言、文字(11)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,j">J 艺术(4)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,k">K 历史、地理(2)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,r">R 医药、卫生(1)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,t">T 工业技术(69)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,u">U 交通运输(1)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,x">X 环境科学、安全科学(1)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,tu0">TU0建筑经济、房地产、资格考试(29)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,tu1">TU1建筑基础科学、建筑勘测(1)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,tu2">TU2建筑设计(3)</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,tu3">TU3建筑结构</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,tu4">TU4土力学、地基基础工程</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,tu5">TU5建筑材料</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,tu6">TU6建筑机械</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,tu7">TU7建筑施工</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,tu8">TU8房屋建筑设备</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,tu97">TU97高层建筑</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,tu98">TU98城乡规划、园林景观</a></li>
+<li><a href="#" alt="2014/1/1-2014/2/28,tu99">TU99市政工程</a></li>
+
+			</ul>
+		</div><!-- /collapsible -->
+		<div id="divTwo" data-role="collapsible" data-inset="false">
+			<h3>2014第二期（3月-4月）</h3>
+			<ul id="ls1" data-role="listview">
+				<li><a href="#" alt="2014/3/1-2014/4/23,a">A 马克思主义、列宁主义、毛泽东思想、邓小平理论</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,b">B 哲学、宗教</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,c">C 社会科学总论</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,d">D 政治、法律</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,e">E 军事</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,f">F 经济</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,g">G 文化、科学、教育、体育</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,h">H 语言、文字</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,i">I 文学</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,j">J 艺术</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,k">K 历史、地理</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,n">N 自然科学总论</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,o">O 数理科学和化学</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,p">P 天文学、地球科学</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,q">Q 生物科学</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,r">R 医药、卫生</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,s">S 农业科学</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,t">T 工业技术</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,u">U 交通运输</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,v">V 航空、航天</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,x">X 环境科学、安全科学</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,z">Z 综合性图书</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,tu0">TU0建筑经济、房地产、资格考试</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,tu1">TU1建筑基础科学、建筑勘测</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,tu2">TU2建筑设计</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,tu3">TU3建筑结构</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,tu4">TU4土力学、地基基础工程</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,tu5">TU5建筑材料</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,tu6">TU6建筑机械</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,tu7">TU7建筑施工</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,tu8">TU8房屋建筑设备</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,tu97">TU97高层建筑</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,tu98">TU98城乡规划、园林景观</a></li>
+<li><a href="#" alt="2014/3/1-2014/4/23,tu99">TU99市政工程</a></li>
+
+			</ul>
+		</div><!-- /collapsible -->
+      
+		<br/>
+		<div id="divScroll">检索结果：</div>
+		<br/>
+		<hr>
+		<br/>
+		
+		<ul id="lsNews" data-role="listview"></ul>
+		
+    </div>
+        
+
+	</div><!-- /content -->
+
+	
+</div><!-- /pList -->
+
+
+<!-- Start of second page: #Three -->
+<div data-role="page" id="pDetail" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>详细页</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<div id="divDetail">详细页</div>
+		<div id="divResv"></div>
+		
+	</div><!-- /content -->
+
+</div><!-- /pDetail -->
+
+
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>借阅记录</title>
+	<link rel="stylesheet" href="css/jquery.mobile.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile.js"></script>
+	<script type="text/javascript" src="js/service.js"></script>
+	<script type="text/javascript" src="js/mjs.js"></script>
+	<script>	
+	
+	
+	var data;
+	//使用pageinit事件，用pagebeforeshow会使click触发两次
+	$(document).on("pageinit","#pList",function(){
+		showLoader();
+		getLoanRecord(handleList);
+	});
+	function handleList(da)
+	{
+		hideLoader();
+		//data=eval(data);
+		data = eval('(' + da + ')');
+		//未登录
+		if(!data||data.status=="0")
+		{
+			location.href='login.html?back=loanrecord.html';
+		}
+		ldb=new localDB();
+		$('#txtTitle').html('借阅记录['+ldb.getUserName()+']');
+		var str='';
+		if(data.length==0)
+		{
+			str="<div>暂无借阅记录</div>";
+		}else
+		{
+		for(var i=0;i<data.length;i++)
+		{
+			str+="<hr /><div><b>书        名:"+data[i].title+"</b><br />登 录 号:"+data[i].bno+"<br />借书日期："+data[i].data2+"<br/>应还日期:"+data[i].data1;
+			if(data[i].xu=="") str+="<br/><button  id="+i+" class='ui-btn ui-corner-all ui-btn-inline' style='background:#4F81BD' href=# >续借</button>";
+			else str+="<br/>"+data[i].xu;
+			str+="</div>";
+		}
+		}
+		$("#divResult").html(str);
+		$("#divResult").trigger("create");
+		
+		$('#divResult button ').click(function(){
+			selid=$(this).attr("id");
+			$(this).attr('disabled', 'disabled');
+			//alert(data[selid].resvrecName);
+			//$.mobile.changePage( "#myDialog", { role: "dialog" } );
+			showLoader();
+			renew({renewValue:data[selid].renewValue,renewName:data[selid].renewName,loanrec:data.length},
+			function(){
+				//alert("取消预约成功");
+				//$( ".ui-dialog" ).dialog( "close" );
+				//$(this).removeAttr('disabled');
+				hideLoader();
+				getLoanRecord(handleList);
+			});
+		});
+	}
+	var selid;
+	$(document).on("pagebeforeshow","#pDetail",function(){ 
+  		if(data[selid])
+		{
+			//$("#divNewDetail").html(data[selid].title);
+			getNewsDetail(data[selid].id,handleNewsDetail);
+		}
+	});
+	function handleNewsDetail(data)
+	{
+		$("#divNewDetail").html(data);
+	}
+	
+    </script>
+</head>
+
+<body>
+
+<div data-role="page" id="pList" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1 id='txtTitle'>借阅记录</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<div id="divResult"></ul>
+    </div>
+        
+
+	</div><!-- /content -->
+
+	
+</div><!-- /pList -->
+
+
+<!-- Start of second page: #Three -->
+<div data-role="page" id="myDialog" data-theme="a" data-overlay-theme="e">
+
+	<div data-role="header">    
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<h1>操作进行中...</h1>
+	</div><!-- /content -->
+
+</div><!-- /pDetail -->
+
+
+
+</body>
+</html>

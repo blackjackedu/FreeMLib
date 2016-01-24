@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>广西建设职业技术学院移动图书馆</title>
+<link rel="stylesheet" href="/js/jq/jquery.mobile-1.0a2.min.css">
+<style type="text/css">
+.banner {
+	background-image: url(img/logo.png);
+}
+</style>
+<script src="/js/jq/jquery-1.4.4.min.js"></script>
+<script src="/js/jq/jquery.mobile-1.0a2.min.js"></script>
+
+
+
+</head>
+<body>
+
+<!-- Page starts here -->
+<div data-role="page" data-theme="b" id="page1">
+  <div data-role="header" id="hdrMain" name="hdrMain" data-nobackbtn="true">
+    <h1><img src="/images/logo.png"></h1>
+  </div>
+  <div data-role="content" id="contentMain" name="contentMain">
+    <div>
+      <form id="form1">
+        <label>关键词*</label>
+        <input id="suchen_word" name="suchen_word" type="text" />
+        <input type="submit" value="检索" data-inline="true"/>
+      </form>
+    </div>
+    <ul id="notesList" data-role="listview" data-inset="true">
+    </ul>
+  </div>
+  <!-- contentMain -->
+  
+  <div data-role="footer" dataid="footernav" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="" class="ui-btnactiveui-state-persist">馆藏目录</a></li>
+        <li><a href="persistent_footer_credits.html"> 数字阅读</a></li>
+        <li><a href="#page2"> 个人中心</a></li>
+      </ul>
+    </div>
+  </div>
+  <script>
+$(document).ready(function() {}); 
+$('#form1').submit(function() { 
+		//alert("go");
+   $.post("http://192.168.4.170/search/iecho",$('#form1').serialize(), function(data){
+			//alert(data);
+			//var s=data.toString();
+			//alert(s);
+		  var o=$.parseJSON(data);
+		  //var o=$.parseJSON('﻿[{"title":"ASP\/ASP.NET\/PHP\/Java\/JavaScript\/Delphi\u603b\u52a8\u5458","classno":"TP391.41\/445"},{"title":"Dreamweaver\/PHP\/MySQL\u52a8\u6001\u7f51\u7ad9\u5efa\u8bbe\u5b9e\u52a1","classno":"TP393.092\/115"},{"title":"Oracle Database Ajax \u0026 PHP Web Application Development","classno":"TP393.092\/195"},{"title":"PHP anthology","classno":"TP312\/357"},{"title":"PHP in action","classno":"TP312\/400"},{"title":"PHP \u65f6\u5c1a\u7f16\u7a0b\u767e\u4f8b","classno":"TP312\/68"},{"title":"PHP \u65f6\u5c1a\u7f16\u7a0b\u767e\u4f8b","classno":"TP312\/68"},{"title":"PHP+MySQL\u52a8\u6001\u7f51\u7ad9\u5f00\u53d1","classno":"TP312\/313"},{"title":"PHP+MySQL\u52a8\u6001\u7f51\u7ad9\u5f00\u53d1","classno":"TP312GP\/18"},{"title":"PHP5\u5b8c\u5168\u653b\u7565","classno":"TP312\/398"}]');
+		  $("#notesList").text('');
+		  var s='';
+		  alert("yes"+o.length);
+		  for(i=0;i<o.length;i++)
+		  {
+			s+='<li>'+o[i].title+',['+o[i].classno+']</li>';
+		  }
+		  //alert(s);
+		  $("#notesList").html(s).listview("refresh");
+        }); 
+		     
+        return false;      
+    });    
+    
+  </script> 
+</div>
+<!-- page1 --> 
+
+<!-- Page ends here -->
+
+<div data-role="page" data-theme="b" id="page2">
+<div data-role="header" id="hdrMain" name="hdrMain" data-nobackbtn="true">
+  <h1><img src="/images/zf2-logo.png">广西建设职业技术学院移动图书馆</h1>
+</div>
+<div data-role="content" id="contentMain" name="contentMain">
+<div id="main_nav">
+  <div class="ui-grid-b"> <a data-inline="true" data-role="button" class="find_hotspot_btn ui-block-a sprite btn_find-hotspot ui-btn ui-btn-inline ui-btn-corner-all ui-shadow ui-btn-up-c" href="#/mobile/find-hotspot" data-theme="c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">收藏夹</span></span></a> <a data-inline="true" data-role="button" class="btn_my-hotspots sprite ui-block-b ui-btn ui-btn-inline ui-btn-corner-all ui-shadow ui-btn-up-c" href="#/mobile/my-hotspots" data-theme="c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">我的订阅</span></span></a> <a data-inline="true" data-role="button" class="btn_species sprite ui-block-c ui-btn ui-btn-inline ui-btn-corner-all ui-shadow ui-btn-up-c" href="#/mobile/fish-species" data-theme="c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">检索记录</span></span></a> <a data-inline="true" data-role="button" class="btn_species sprite ui-block-c ui-btn ui-btn-inline ui-btn-corner-all ui-shadow ui-btn-up-c" href="#/mobile/fish-species" data-theme="c"><span class="ui-btn-inner ui-btn-corner-all"><span class="ui-btn-text">设置</span></span></a> </div>
+  <div class="ui-grid-a"></div>
+</div>
+
+<!-- contentMain -->
+
+<div data-role="footer" dataid="footernav" data-position="fixed">
+    <div data-role="navbar">
+      <ul>
+        <li><a href="#page1" class="ui-btnactiveui-state-persist">馆藏目录</a></li>
+        <li><a href=""> 数字阅读</a></li>
+        <li><a href=""> 个人中心</a></li>
+      </ul>
+    </div>
+  </div>
+</body>
+</html>

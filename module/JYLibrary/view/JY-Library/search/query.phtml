@@ -1,0 +1,252 @@
+ <?php
+ $title='按主题查询';
+ $this->headTitle($title);
+ ?>
+ <!--
+  <h1><?php echo $this->escapeHtml($title);?></h1>
+ <form action="query" method="post">
+ <div>
+ <select name="ff">
+ <option value="all" selected="selected">任意字段关键词</option>
+ <option value="subject" selected="selected">主题</option>
+ <option value="publisher" selected="selected">出版社</option>
+ <option value="author" selected="selected">作者</option>
+ </select>
+ <input type="input" name="qtxt" value="<?php echo $this->qtxt; ?>" />
+ <input type="submit" name="ok" value="Go" />
+ </div>
+ </form>
+ 
+ -->
+ 
+ <STYLE type="text/css">
+.searchstyle2 {color: #000000;
+    font-family: arial;
+    font-weight: bold;
+    text-decoration: none;}
+.searchstyle {color: #0000CC;
+    font-family: arial;
+    text-decoration: underline;}
+</STYLE>
+ <script language="JavaScript">
+
+function change_linkstyle(tag,str_id)
+        {    
+            //alert("1");
+            //alert(tag.tagName);
+            //alert(str_id);
+
+            var searchtypes  = document.getElementsByName("type_id");
+            for(var i=searchtypes.length-1;i>=0;i--){
+                var searchtype = searchtypes[i];
+                searchtype.className= "searchstyle";
+            
+            }
+            tag.className= "searchstyle2";
+            //document.getElementById("barcode").color="";
+            ////document.getElementById("email").color="";
+            ///document.getElementById("e_card").color="";
+            ///document.getElementById(id).color="red";
+            document.getElementById("suchen_type").value=str_id;
+        }
+function change_class(){
+    document.getElementById("simple_search").className="simple_search_1";
+    document.getElementById("complex_search").className="complex_search_1";
+}
+function check(theForm) {//检索的判断    
+    var s_word=theForm.suchen_word.value;
+    var s_match=theForm.suchen_match.value;
+    var len =s_word.length;
+    if(s_word=="%")
+    {
+        alert("不支持 % 检索！请输入检索词！");
+        return false;
+    }
+
+    if((len<2)&&(s_match!="jq"))
+    {
+        alert("检索词过短，请输入长检索词或精确匹配！")
+        return false;
+    }
+    if(s_word=="%")
+    {
+        alert("不支持 % 检索！请输入检索词！");
+        return false;
+    }
+    
+    for(i=0;i<len;i++)
+    {
+        
+        s_word=s_word.replace(" ","");
+        s_word=s_word.replace("%","");
+        
+    }
+    if(s_word=="")
+    {
+        alert("请输入检索词！");
+        return false;
+    }    
+}
+
+</script>
+
+
+<center>
+ <form onsubmit="javascript:return check(this);" name="suchen" action="unify" method="POST"> 	
+<br><br><br><br><table width="500" border="0">
+
+
+
+<tbody><tr>
+	<!-- <td align=right >检索词类型:&nbsp;</td> -->
+	<td>
+
+<!-- <select name="suchen_type" size="1"> -->
+
+				<input type="hidden" value="1" id="suchen_type" name="suchen_type">
+				<!-- <option value="1">所有题名</option> -->
+
+				<a onclick="change_linkstyle(this,'1')" class="searchstyle2" href="#" id="type_id" name="type_id">所有题名</a>&nbsp;&nbsp;
+				
+				<!-- <option value="2">出版社</option> -->
+
+				<a onclick="change_linkstyle(this,'2')" href="#" class="searchstyle" id="type_id" name="type_id">出版社</a>&nbsp;&nbsp;
+				
+				<!-- <option value="3">索书号</option> -->
+
+				<a onclick="change_linkstyle(this,'3')" href="#" class="searchstyle" id="type_id" name="type_id">索书号</a>&nbsp;&nbsp;
+				
+				<!-- <option value="4">作者</option> -->
+
+				<a onclick="change_linkstyle(this,'4')" href="#" class="searchstyle" id="type_id" name="type_id">作者</a>&nbsp;&nbsp;
+				
+				<!-- <option value="6">主题词</option> -->
+
+				<a onclick="change_linkstyle(this,'6')" href="#" class="searchstyle" id="type_id" name="type_id">主题词</a>&nbsp;&nbsp;
+				
+				<!-- <option value="7">图书条码</option> -->
+
+				<a onclick="change_linkstyle(this,'7')" href="#" class="searchstyle" id="type_id" name="type_id">图书条码</a>&nbsp;&nbsp;
+				
+				<!-- <option value="8">分类号</option> -->
+
+				<a onclick="change_linkstyle(this,'8')" href="#" class="searchstyle" id="type_id" name="type_id">分类号</a>&nbsp;&nbsp;
+				
+				<!-- <option value="9">题名缩拼</option> -->
+
+				<a onclick="change_linkstyle(this,'9')" href="#" class="searchstyle" id="type_id" name="type_id">题名缩拼</a>&nbsp;&nbsp;
+				
+<!-- </select> -->
+
+
+  </td>
+</tr>
+<tr>
+	<!-- <td align=right >检索词:&nbsp;</td> -->
+  	<td>
+	
+	<div style="z-index:3;width: 450px;">
+	<table width="450">
+	<tbody><tr>
+		<td>
+	<input type="text" onblur="Element.hide('brandTip')" value="" style="float:left; width:362px; height:28px; font-size:16px;font-family:Arial; border:1px solid #7F9DB9; " autocomplete="off" name="suchen_word" id="suchen_word"> <input type="submit" style="float:right; width:75px; height:28px; line-height:24px; font-size:14px;" name="B1" value="检&nbsp;&nbsp;索">
+		</td>
+	</tr><tr>
+		<td>
+	
+	<div style="position:absolute;float:left;top:115px;
+ z-index:4;width:362px;border:#000000 1px solid;background-Color:#ffffff;display:none" id="brandTip"></div>
+		</td>
+	</tr>
+	</tbody></table>
+	</div>
+	
+	</td>
+</tr>
+
+
+
+<tr>
+<!-- <td align=right >资料类型:&nbsp;</td>  -->
+	<td>
+
+<!-- <select name="recordtype"> -->
+<!-- <option value='all'>全部</option> -->
+<br>
+	<div style="font: 13px; float:left; background:#F0F0F0;"><b>资源选择：</b></div>
+	<div style="font: 13px;color: #00c;">
+		<table style="font: 13px;color: #00c;">
+		<tbody><tr>
+			<td style="font: 13px;color: #00c;">
+				<input type="checkbox" name="fangzheng" value="Y">方正电子图书&nbsp;&nbsp;
+					
+				<input type="checkbox" name="chaoxing" value="Y">超星电子图书&nbsp;&nbsp;
+				<input type="checkbox" name="shusheng" value="Y">书生电子图书&nbsp;&nbsp;
+			</td>
+		</tr>
+		<tr>
+			<td style="font: 13px;color: #00c;">
+			<input type="checkbox" name="res_1" value="Y">学院资料室&nbsp;&nbsp;
+		
+			</td>
+		</tr>
+		</tbody></table>
+	</div>
+<div style="font: 13px; float:left; background:#F0F0F0;"><b>资料类型：</b></div><div style="font: 13px;color: #00c;">
+
+<!-- <option value="##">所有类型</option> -->
+&nbsp;&nbsp;<input type="Radio" value="##" checked="checked" name="recordtype">所有类型
+
+<!-- <option value="01">中文图书</option> -->
+&nbsp;&nbsp;<input type="Radio" value="01" name="recordtype">中文图书
+
+<!-- <option value="02">西文图书</option> -->
+&nbsp;&nbsp;<input type="Radio" value="02" name="recordtype">西文图书
+
+<!-- <option value="03">日文图书</option> -->
+&nbsp;&nbsp;<input type="Radio" value="03" name="recordtype">日文图书
+
+<!-- </select> -->
+
+</div>
+	</td>
+</tr>
+<tr>
+	<!-- <td align=right >匹配方式:&nbsp;</td>  -->
+	<td>
+  		<!-- <select name="suchen_match" size="1">
+  			<option value="qx">前向匹配</option>
+    		<option value="mh">模糊匹配</option>
+    		<option value="jq">精确匹配</option>
+  		</select>  -->
+		<div style="font: 13px; float:left; background:#F0F0F0;"><b>匹配方式：</b></div>
+		<div style="font: 13px;color: #00c;">
+		&nbsp;&nbsp;<input type="Radio" checked="checked" value="qx" name="suchen_match">前向匹配
+		&nbsp;&nbsp;<input type="Radio" value="mh" name="suchen_match">模糊匹配
+		&nbsp;&nbsp;<input type="Radio" value="jq" name="suchen_match">精确匹配
+		</div>
+	</td>
+</tr>
+<tr>
+	<!-- <td align=right >分馆名称:&nbsp;</td>  -->
+	<td> 
+
+<!-- <select name="library_id"> -->
+<!-- <option value='all'>所有分馆</option> -->
+<!-- 分馆名称：&nbsp;&nbsp;<input type="Radio" name="library_id" value="all" checked="checked" />所有分馆 -->
+
+<!-- <option value="A">???????</option> -->
+<!-- &nbsp;&nbsp;<input type="Radio" name="library_id" value="A"  />??????? -->
+
+<!-- <option value="B">??????</option> -->
+<!-- &nbsp;&nbsp;<input type="Radio" name="library_id" value="B"  />?????? -->
+
+<!-- </select> -->
+  
+	</td>
+</tr>
+
+</tbody></table>
+</form>
+ 
+</center> 

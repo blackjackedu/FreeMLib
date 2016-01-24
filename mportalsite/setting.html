@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>个人设置</title>
+	<link rel="stylesheet" href="css/jquery.mobile.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile.js"></script>
+	<script type="text/javascript" src="js/service.js"></script>
+	<script type="text/javascript" src="js/mjs.js"></script>
+	<script>
+	var redirectURL;
+	//使用pageinit事件，用pagebeforeshow会使click触发两次
+	$(document).on("pageinit","#pMain",function(){
+		//redirectURL=getURLParameter(window.location,back);
+	});
+	
+		function logoutClick(){					
+					showLoader();
+					logout(onSuccess,onError);
+		} 
+		
+		function loginClick(){					
+				location.href="login.html";
+		} 
+
+		function onSuccess(data){
+			hideLoader();
+			data=eval('(' + data + ')');
+			if(data.status=="0")
+			{
+				
+			}	
+			$("#txtMessage").html(data.message);
+			$("#txtMessage").trigger("create");
+		}
+
+		function onError(data){
+				//location.reload();
+				$("#txtMessage").html("连接错误");
+				$("#txtMessage").trigger("create");
+		} 
+
+	</script>		
+</head>
+
+<body>
+
+<div data-role="page" id="pMain" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>个人设置</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">		
+           
+            <button id="btnLogin" class="ui-btn" onClick="loginClick()" style="background:#4F81BD">登录</button>  
+			<button id="btnLogout" class="ui-btn" onClick="logoutClick()" style="background:#4F81BD">注销</button>  			
+        
+		<br/>
+		
+   
+		<div id="txtMessage" >功能测试中...</div>
+    </div>
+        
+
+	</div><!-- /content -->
+
+	
+</div><!-- /pList -->
+
+
+</body>
+</html>

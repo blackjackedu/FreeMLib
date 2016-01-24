@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>开放时间</title>
+	<link rel="stylesheet" href="css/jquery.mobile.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile.js"></script>
+	<script type="text/javascript" src="js/service.js"></script>
+	<script>	
+
+	
+	$(document).on("pageinit","#pDetail",function(){ 
+  		
+			getKF(handleNewsDetail);
+
+	});
+	function handleNewsDetail(data)
+	{
+		$("#divNewDetail").html(data);
+	}
+	
+    </script>
+</head>
+
+<body>
+
+
+<!-- Start of second page: #Three -->
+<div data-role="page" id="pDetail" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>开放时间</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<div id="divNewDetail"></div>
+	</div><!-- /content -->
+
+</div><!-- /pDetail -->
+
+
+
+</body>
+</html>

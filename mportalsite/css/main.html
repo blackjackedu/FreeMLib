@@ -1,0 +1,621 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>CRSCloud</title>
+	<link rel="stylesheet" href="css/jquery.mobile.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile.js"></script>
+	<script type="text/javascript" src="js/service.js"></script>
+	<script type="text/javascript" src="js/ichart.1.2.min.js"></script>
+    <script type="text/javascript" src="js/cordova.js"></script>
+	<script>
+	var account;
+
+	document.addEventListener("deviceready", onDeviceReady, false);  
+	function onDeviceReady() {
+    }  
+		
+	$(document).on("mobileinit",function(){
+		initMessager();
+		
+		$("[data-role='navbar']").navbar();
+		$("[data-role='header'],[data-role='footer']").toolbar();
+		
+		account = ldb.getAccount();			
+	});
+	
+	$(document).on("pageinit","#pageMain",function(){  
+  		initMessager();
+		initClassRoom();
+		$("[data-role='navbar']").navbar();
+		$("[data-role='header'],[data-role='footer']").toolbar();
+		
+		account = ldb.getAccount();	
+		//alert(messager);
+		//messager.connect(connectHandle);	
+		classroom.getClassRoomList(getClassRoomListHandle);
+	});
+	
+		function getClassRoomListHandle(data)
+		{
+			if(data.length>0)
+			{				
+				var str="";
+				for(var i=0;i<data.length;i++)
+				{
+					str+="<li><a id="+data[i].crid+">"+data[i].name+"</a></li>";
+				}
+				$("#lsMessages").html(str);
+				$("#lsMessages").listview("refresh");
+				
+				var txtWC=account.name;
+				if(account.type=="2")txtWC+="老师";
+				else if(account.type=="1") txtWC+="同学";
+				$("#txtPMTitle").html(txtWC);
+				
+				$('#lsMessages a').click(function(){
+					crid=$(this).attr("id");
+					if(account.type=="2")$.mobile.changePage("#pageClassRoom");
+					else if(account.type=="1")
+					{
+						
+						$.mobile.changePage("#pageStudentWait");
+					}
+				});
+			
+			}
+		}
+
+	//最新消息返回
+		function lastMessageHandle(data)
+		{
+			var str="";
+			for(var i=0;i<data.length;i++)
+			{
+				str+="<li><a id="+data[i].crid+" onclick='return false' href='"+data[i].sourceID+"'><img src='images/img/album-bb.jpg'><h2>"+data[i].sourceName+"说：</h2><p class='ui-li-aside'><strong>"+data[i].date+"</strong></p><p>"+data[i].content+"</p></a></li>";
+			}
+			$("#lsMessages").html(str);
+			$("#lsMessages").listview("refresh");
+			$('#lsMessages a').click(function(){
+				window.location.href='chat.html?destID='+$(this).attr('href');
+			});
+		}
+
+	
+	var currClassRoom;
+	var crid;//当前进入的课堂ID,教师界面
+	//使用pageinit事件，用pagebeforeshow会使click触发两次
+	$(document).on("pageinit","#pageClassRoom",function(){
+		//发送题目
+		$("#btnSendItem").click(function(){
+			classroom.sendItem(crid,currItem.iid,sendItemHandle);
+		});
+		//清除学生端题目
+		$("#btnSendClearItem").click(function(){
+			classroom.sendItem(crid,"-1",sendItemHandle);
+		});
+		//发送答案
+		$("#btnSendAnswer").click(function(){
+			classroom.sendItem(crid,"-2",sendItemHandle);
+		});
+		$("#btnCheckAnswer").click(function(){
+			classroom.getClassRoomAIStatus(crid,currItem.iid,getClassRoomAIStatusHandle);
+		});
+	});
+	
+	$(document).on("pagebeforeshow","#pageClassRoom",function(){ 
+  	//$("#pageClassRoom").live('pageshow', function () {	
+		//获取本课堂信息
+		classroom.enter(crid,enterClassRoomHandle);
+		
+		$("#canvasDiv").html("");
+		$("#canvasDiv2").html("");	
+		$("#canvasDiv3").html("");	
+		$("#divStudnetAnswer").html("");	
+		
+		
+	});
+	function getClassRoomAIStatusHandle(data)
+	{
+		//alert(data);
+		var st=0;//已答
+		var sf=0;//未答
+		
+		var at=0;//答对
+		var af=0;//答错
+		
+		var objAnswer={"0":0,"1":0,"2":0,"3":0,"4":0};
+		
+		var str="<ul>";
+		for(var i=0;i<data.length;i++)
+		{
+			if(ChoiceFlag[data[i].answer]==null) str+="<li>"+data[i].name+":"+(data[i].answer==null?"未答":data[i].answer.replace(/@/g,","))+"</li>";
+			else str+="<li>"+data[i].name+":"+ChoiceFlag[data[i].answer]+"</li>";
+			objAnswer[data[i].answer]++;
+			if(data[i].status=="0")sf++;
+			else
+			{				
+				st++;
+				if(data[i].score=="1")at++;
+				else af++;
+			}
+			
+		}
+		str+="</ul>";
+		$("#divStudnetAnswer").html(str);
+		$("#divStudnetAnswer").trigger("create");
+		var data = [
+					{name : '已提交',value : st,color:'#47d890'},
+				    {name : '未提交',value : sf,color:'#f79646'}
+			        ];
+	    new iChart.Pie2D({
+					render : 'canvasDiv',
+					data: data,
+					title : '提交情况',
+					legend : {
+						enable : false
+					},
+					showpercent:false,
+					decimalsnum:0,
+					width:$(document).width(),
+					height:400,
+					radius:80
+		}).draw();
+		
+		var data3 = [
+					{name : ChoiceFlag["0"],value:objAnswer["0"],color:'#47d890'},
+				    {name : ChoiceFlag["1"],value:objAnswer["1"],color:'#f79646'},
+					{name : ChoiceFlag["2"],value:objAnswer["2"],color:'#4bacc6'},
+					{name : ChoiceFlag["3"],value:objAnswer["3"],color:'#ace946'}
+			        ];
+	    new iChart.Pie2D({
+					render : 'canvasDiv3',
+					data: data3,
+					title : '答案情况',
+					legend : {
+						enable : false
+					},
+					showpercent:false,
+					decimalsnum:0,
+					width:$(document).width(),
+					height:400,
+					radius:80
+		}).draw();
+		
+		var data = [
+					{name : '答对',value : at,color:'#f79646'},
+				    {name : '答错',value : af,color:'#4bacc6'}
+			        ];
+	    new iChart.Pie2D({
+					render : 'canvasDiv2',
+					data: data,
+					title : '得分情况',
+					legend : {
+						enable : true
+					},
+					showpercent:false,
+					decimalsnum:0,
+					width:$(document).width(),
+					height:400,
+					radius:80
+		}).draw();
+	}
+	function sendItemHandle(data)
+	{
+		if(data.success)
+		{
+			//alert("发送成功");
+		}
+	}
+	var assessmentItems=null;
+	var currItem=null;
+	function enterClassRoomHandle(data)
+	{
+		//开始监听
+		classroom.subscribe(crid,classroomMessHandle);
+		
+		if(data.classroom!=null)
+		{
+			currClassRoom=data.classroom;
+			$("#p2Title").text(data.classroom.name);
+			
+			//显示题目
+			if(data.classroom.assessmentItems.length>0)
+			{
+				assessmentItems=data.classroom.assessmentItems;
+				var str="";
+				for(var i=0;i<assessmentItems.length;i++)
+				{
+					str+="<li><a cid='"+i+"' id='"+assessmentItems[i].iid+"'>"+assessmentItems[i].label+"</a></li>";
+				}
+				$("#lsItem").html(str);
+				$("#lsItem").listview("refresh");
+				
+				$('#lsItem a').click(function(ev){
+					currItem=assessmentItems[$(this).attr("cid")];
+					 $.mobile.changePage("#pageItem");
+				});
+			}
+			
+		}
+	}
+	function classroomMessHandle(data)
+	{
+		//alert(data);
+		
+		//继续听
+		//classroom.subscribe(crid,classroomMessHandle);
+	}
+	
+	
+	
+	
+	$(document).on("pagebeforeshow","#pageItem",function(){ 
+  		//显示当前题目
+		
+		if(currItem!=null)
+		{
+			
+			var str="";
+			if(currItem.type=="C")
+			{
+				$('#divItemBody').html(currItem.body);
+				$("#divItemBody").trigger("create");
+				var items=currItem.items;
+				items=items.split("@");
+				
+				str='<fieldset data-role="controlgroup">';
+				for(var i=0;i<items.length;i++)
+				{
+					//<input name="radio-choice-1" id="radio-choice-1" value="choice-1" checked="checked" type="radio"><label for="radio-choice-1">Cat</label>
+					str+='<input name="radio-choice-1" id="radio-choice-'+i+'" value="'+i+'"  type="radio"><label for="radio-choice-'+i+'">'+ChoiceFlag[i]+". "+items[i]+'</label>';
+				}
+				str+='</fieldset>';
+				$('#divItemItems').html(str);
+				$("#divItemItems").trigger("create");
+			
+			}else if(currItem.type=="T")
+			{
+				str=currItem.body;
+				
+				var cc=0;
+				while(str.indexOf("@")>=0)
+				{
+					cc++;
+					str=str.replace(/@/,'<input name="txtA_'+cc+'" id="txtA_'+cc+'" value="" type="text">');
+				}
+				
+				$('#divItemBody').html(str);
+				$("#divItemBody").trigger("create");
+				
+				$('#divItemItems').html("");
+			}
+			
+			
+		}
+		
+	});
+	
+	$(document).on("pagebeforeshow","#pageStudentWait",function(){ 
+  		classroom.enter(crid,enterClassRoomHandle2);
+	});
+	//学生进入
+	function enterClassRoomHandle2(data)
+	{
+		
+		classroom.subscribe(crid,studentClassroomMessHandle);
+		if(data.classroom!=null)
+		{
+			currClassRoom=data.classroom;	
+			assessmentItems=data.classroom.assessmentItems;
+			if(currClassRoom.currIId!="")
+			{
+				DisplayItemForStudent(currClassRoom.currIId);
+			}
+		}
+	}
+	function getAssessmentItem(aid)
+	{
+		for(var i=0;i<assessmentItems.length;i++)
+		{
+			if(assessmentItems[i].iid==aid)
+			{
+				return assessmentItems[i];
+			}
+		}
+		return null;
+	}
+	
+	var ChoiceFlag={"0":"A","1":"B","2":"C","3":"D","4":"E","5":"F"};
+	
+	function DisplayItemForStudent(iid)
+	{
+		$("#divFeedback").html("");
+		if(iid=="-1"){
+			$("#divStudentItem").html("<h2>请等待老师出题</h2>");
+			$("#divFeedback").html("");
+			return ;
+		}
+		currItem=getAssessmentItem(iid);
+		if(currItem!=null)
+		{
+			var str="";
+			
+			if(currItem.type=="C")
+			{
+				str="<div>"+currItem.body+"</div>";
+				
+				var items=currItem.items;
+				items=items.split("@");
+				
+				str+='<div><fieldset id="frmRadio" data-role="controlgroup">';
+				for(var i=0;i<items.length;i++)
+				{
+					//<input name="radio-choice-1" id="radio-choice-1" value="choice-1" checked="checked" type="radio"><label for="radio-choice-1">Cat</label>
+					str+='<input name="radio-choice-1" id="radio-choice-'+i+'" value="'+i+'"  type="radio"><label for="radio-choice-'+i+'">'+ChoiceFlag[i]+". "+items[i]+'</label>';
+				}
+				str+='</fieldset></div>';
+				
+			}else if(currItem.type=="T")
+			{
+				str=currItem.body;
+				var cc=0;
+				while(str.indexOf("@")>=0)
+				{
+					cc++;
+					str=str.replace(/@/,'<input name="txtA_'+cc+'" id="txtA_'+cc+'" value="" type="text">');
+				}			
+			}
+			str+='<button id="btnSubmitItem" class="ui-btn" style="background:#4F81BD" data-enhanced="true">提交</button>';
+			str+='<button id="btnXX" class="ui-btn" style="background:#4F81BD" data-enhanced="true">标记易错</button>';
+			$("#divStudentItem").html(str);
+			$("#divStudentItem").trigger("create");
+			$("#btnSubmitItem").click(function(){
+				var answer="";
+				
+				if(currItem.type=="C")
+				{
+					answer=$("#frmRadio :radio:checked").val();
+				}else if(currItem.type=="T")
+				{
+					var txtA=$(":input[type='text']");
+					
+					txtA.each(function(index){
+						answer+=txtA.eq(index).val()+"@";
+					});
+					if(answer!="") answer=answer.substr(0,answer.length-1);
+				}
+				//alert(answer);
+				classroom.sendAnswer(crid,currItem.iid,answer,function(){alert("提交成功");});
+			});
+		}else
+		{
+			$("#divStudentItem").html("<h2>请等待老师出题</h2>");
+			$("#divFeedback").html("");
+		}
+	}
+	function studentClassroomMessHandle(data)
+	{
+		//alert(data);
+		//显示题目
+		var iid=data[0][0];
+		if(iid!=null&&currClassRoom.status==1)
+		{
+			if(iid=="-2")
+			{
+				//检查答案
+				var answer="";
+				var str="";
+				if(currItem.type=="C")
+				{
+					answer=$("#frmRadio :radio:checked").val();
+					
+					if(currItem.outcome==answer)
+					{
+						str+="<image src='aiimage/right.png' />";
+					}else
+					{
+						str+="<image src='aiimage/wrong.png' />";
+					}
+					str+="<h4>正确答案是："+ChoiceFlag[currItem.outcome]+"</h4>";
+					//str+="<p>"+currItem.feedback+"</p><hr/>";
+					str+="<hr style='border:1px dotted #CCC; height:1px'/>";
+					$("#divFeedback").html(str);
+					$("#divFeedback").trigger("create");
+				}else if(currItem.type=="T")
+				{
+					var txtA=$(":input[type='text']");
+					
+					txtA.each(function(index){
+						answer+=txtA.eq(index).val()+"@";
+					});
+					if(answer!="") answer=answer.substr(0,answer.length-1);
+					if(currItem.outcome==answer)
+					{
+						str+="<image src='aiimage/right.png' />";
+					}else
+					{
+						str+="<image src='aiimage/wrong.png' />";
+					}
+					str+="<h4>正确答案是："+currItem.outcome.replace(/@/g,",")+"</h4>";
+					//str+="<p>"+currItem.feedback+"</p><hr style='border:1px dashed red; height:1px'/>";
+					str+="<hr style='border:1px dotted #CCC; height:1px'/>";
+					$("#divFeedback").html(str);
+					$("#divFeedback").trigger("create");
+				}
+			}else
+			{
+				DisplayItemForStudent(iid);
+			}
+		}
+		classroom.subscribe(crid,studentClassroomMessHandle);
+	}
+	
+	function exitApp()
+	{
+		if(confirm("是否要退出程序?")){
+ 			navigator.app.exitApp();
+		}
+		
+	}
+    </script>
+</head>
+
+<body>
+
+<!-- Start of first page: #one -->
+<div data-role="page" id="pageMain" data-theme="a">
+
+	<div data-role="header" data-theme="b">
+		<h1 id="txtPMTitle">CRSCloud</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content" >
+		<ul id="lsMessages" data-role="listview" data-filter="true" data-filter-placeholder="搜索..." data-inset="true">
+   
+		</ul>
+
+		</div><!-- /content -->       
+        
+    
+    <div data-role="footer" data-position="fixed" data-theme="b" data-tap-toggle="false">
+		<div id="nav" data-role="navbar" data-position="fixed">
+			<ul>
+				<li><a href="#pageMain" data-icon="mail" data-transition="none">课堂</a></li>
+				<li><a href="#page2" data-icon="bullets" data-transition="none">管理</a></li>
+				<li><a href="#page3" data-icon="edit" data-transition="none">交流中心</a></li>
+				<li><a href="" onclick="exitApp();" data-icon="delete" data-transition="none">退出</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer -->
+    
+</div><!-- /pageMain -->
+
+<!-- Start of second page: #two -->
+<div data-role="page" id="pageClassRoom" data-theme="a">
+
+	<div data-role="header">
+    	<a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1 id="p2Title">课堂</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<h3>试题列表</h3>
+        <div id="divItemList">
+        	<ul id="lsItem" data-role="listview"></ul>
+        </div>
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed" data-theme="b" data-tap-toggle="false">
+		<div id="nav" data-role="navbar" data-position="fixed">
+			<ul>
+				<li><a href="#pageMain" data-icon="mail" data-transition="none">课堂</a></li>
+				<li><a href="#page2" data-icon="bullets" data-transition="none">管理</a></li>
+				<li><a href="#page3" data-icon="edit" data-transition="none">交流中心</a></li>
+				<li><a href="" onclick="exitApp();" data-icon="delete" data-transition="none">退出</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer -->
+</div><!-- /page two -->
+
+
+<!-- Start of second page: #Three -->
+<div data-role="page" id="pageItem" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>试题内容页</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<div id="divItemBody"></div>
+        <div id="divItemItems"></div>
+        
+        <button id="btnSendItem" style="background:#4fa7e3" class="ui-btn" data-enhanced="true">发送题目</button>
+        <button id="btnSendClearItem" class="ui-btn" style="background:#4fa7e3" data-enhanced="true">清屏</button>
+        <button id="btnSendAnswer" class="ui-btn"  style="background:#4fa7e3"data-enhanced="true">发送答案</button>
+        <button id="btnCheckAnswer" class="ui-btn"  style="background:#4fa7e3" data-enhanced="true">查看答题</button>
+        <button id="btn00" class="ui-btn"  style="background:#4fa7e3" data-enhanced="true">标记易错</button>
+        <div id='canvasDiv'></div>
+        <div id='canvasDiv2'></div>
+		<div id='canvasDiv3'></div>
+        <div id='divStudnetAnswer'></div>
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed" data-theme="b" data-tap-toggle="false">
+		<div id="nav" data-role="navbar" data-position="fixed">
+			<ul>
+				<li><a href="#pageMain" data-icon="mail" data-transition="none">课堂</a></li>
+				<li><a href="#page2" data-icon="bullets" data-transition="none">管理</a></li>
+				<li><a href="#page3" data-icon="edit" data-transition="none">交流中心</a></li>
+				<li><a href="" onclick="exitApp();" data-icon="delete" data-transition="none">退出</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer -->
+</div><!-- /page 3 -->
+
+
+<!-- Start of second page: #four -->
+<div data-role="page" id="pageStudentWait" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>答题中</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<div id="divFeedback"></div>
+        <div id="divStudentItem">
+        </div>
+        
+
+	</div><!-- /content -->
+
+	<div data-role="footer" data-position="fixed" data-theme="b" data-tap-toggle="false">
+		<div id="nav" data-role="navbar" data-position="fixed">
+			<ul>
+				<li><a href="#pageMain" data-icon="mail" data-transition="none">课堂</a></li>
+				<li><a href="#page2" data-icon="bullets" data-transition="none">管理</a></li>
+				<li><a href="#page3" data-icon="edit" data-transition="none">交流中心</a></li>
+				<li><a href="" onclick="exitApp();" data-icon="delete" data-transition="none">退出</a></li>
+			</ul>
+		</div><!-- /navbar -->
+	</div><!-- /footer -->
+</div><!-- /page 4 -->
+
+
+<!-- Start of second page: #chat -->
+<div data-role="page" id="pageChat" data-theme="b">
+
+	<div data-role="header">
+		<h1>我</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<h2>我</h2>
+
+	</div><!-- /content -->
+	
+</div><!-- /page 4 -->
+
+
+
+<!-- Start of third page: #popup -->
+<div data-role="page" id="popup">
+
+	<div data-role="header" data-theme="b">
+		<h1>弹出框</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">		
+		<p><a href="#one" data-rel="back" class="ui-btn ui-shadow ui-corner-all ui-btn-inline ui-icon-back ui-btn-icon-left">Back to page "one"</a></p>
+	</div><!-- /content -->
+</div><!-- /page popup -->
+
+
+
+</body>
+</html>

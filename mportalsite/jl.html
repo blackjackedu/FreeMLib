@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>读书交流</title>
+	<link rel="stylesheet" href="css/jquery.mobile.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile.js"></script>
+	<script type="text/javascript" src="js/service.js"></script>
+	<script>	
+	
+	
+	var news;
+	//使用pageinit事件，用pagebeforeshow会使click触发两次
+	$(document).on("pageinit","#pList",function(){
+		getJLList(handleNewsList);
+	});
+	function handleNewsList(data)
+	{
+		//data=eval(data);
+		news = eval('(' + data + ')');
+		var str='';
+		for(var i=0;i<news.length;i++)
+		{
+			str+="<li><a  id='"+i+"'>"+news[i].title+"</a></li>";
+		}
+		$("#lsNews").html(str);
+		$("#lsNews").listview("refresh");
+		$('#lsNews a').click(function(){
+			selid=$(this).attr("id");
+			$.mobile.changePage("#pDetail");
+		});
+			
+	}
+	var selid;
+	$(document).on("pagebeforeshow","#pDetail",function(){ 
+  		if(news[selid])
+		{
+			//$("#divNewDetail").html(news[selid].title);
+			getJLDetail(news[selid].id,handleNewsDetail);
+		}
+	});
+	function handleNewsDetail(data)
+	{
+		$("#divNewDetail").html(data);
+	}
+	
+    </script>
+</head>
+
+<body>
+
+<div data-role="page" id="pList" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>读书交流</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<ul id="lsNews" data-role="listview"></ul>
+    </div>
+        
+
+	</div><!-- /content -->
+
+	
+</div><!-- /pList -->
+
+
+<!-- Start of second page: #Three -->
+<div data-role="page" id="pDetail" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>读书交流内容页</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<div id="divNewDetail">详细页</div>
+	</div><!-- /content -->
+
+</div><!-- /pDetail -->
+
+
+
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>广西建设职业技术学院移动图书馆</title>
+<link rel="stylesheet" href="js/jq/jquery.mobile-1.0a2.min.css">
+<style type="text/css">
+.banner {
+	background-image: url(img/logo.png);
+}
+</style>
+<script src="js/jq/jquery-1.4.4.min.js"></script>
+<script src="js/jq/jquery.mobile-1.0a2.min.js"></script>
+
+
+
+</head>
+<body>
+
+<!-- Page starts here -->
+<div data-role="page" data-theme="b" id="page1">
+  <div data-role="header" id="hdrMain" name="hdrMain" data-nobackbtn="true">
+    <a href="index.html" rel='external' data-icon="gear" class="ui-btn-left">首页</a><h1>馆藏资源</h1><a href="A1.html"  rel='external' data-icon="gear" class="ui-btn-right">借阅信息</a>
+  </div>
+  <div data-role="content" id="contentMain" name="contentMain">
+    <form>
+  <input name="password" id="search" value="" placeholder="Placeholder text..." type="search"><a id="btnQuery" href="#" data-role="button" data-mini="true" data-inline="true" data-icon="check" data-theme="b">检索</a>
+    <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true">
+        <input name="radio-choice-b" id="radio-choice-c" value="book" checked="checked" type="radio">
+        <label for="radio-choice-c">题名</label>
+        <input name="radio-choice-b" id="radio-choice-d" value="journal" type="radio">
+        <label for="radio-choice-d">作者</label>
+         <input name="radio-choice-b" id="radio-choice-a" value="newspaper" type="radio">
+        <label for="radio-choice-a">主题词</label>
+        <input name="radio-choice-b" id="radio-choice-e" value="video" type="radio">
+        <label for="radio-choice-e">ISBN</label>
+	</fieldset>
+    </form>
+    <hr />
+    <div id="divResult"></div>
+<script>
+	
+    $('#btnQuery').click(function() {
+        //alert($("input[name='radio-choice-b']:checked").val());
+		$.ajax({
+			type: "get",
+			data:{word:$('#search').val()},
+			url: "http://192.168.4.170/search/getBook",
+			crossDomain :true,
+ 			dataType:"jsonp",
+ 			jsonp: 'jsonpCallback',
+ 			jsonpCallback:'jsonpCallback',
+			success: function(data, textStatus){
+			//alert(data);
+			//$("#txt").text(data.ajax);
+			//var data2 = eval('(' + data + ')');
+			var data2=data;
+					html="<div id='pCont'>";
+					for(var i=0;i<data2.length;i++)
+					{
+						html+="<p><h4><a id='aa_"+data2[i].href+"' href='#pDetail'>"+data2[i].title+"</a></h4><span>责任者："+data2[i].authors+"</span><br /><span>出版年："+data2[i].year+"</span><br /><span>索书号："+data2[i].classno+"</span></p><hr />";
+					}
+					html+="</div>";
+					$("#divResult").text('');
+					$("#divResult").append(html);
+					
+					$("#pCont a").bind("click",function()
+					{
+						var value = $( this ).attr( 'id' );
+						var arr=value.split("_");
+						id=arr[1];
+						//alert(id);
+							$("#divDetail").text('');
+						$.get("http://192.168.4.170/search/getBookDetail",{id:id},function(data){
+						
+						$("#divDetail").append(data);
+						});
+					}); 
+			}
+		});
+
+		
+	});
+</script>
+</div> <!--page1 contend end-->
+ </div> <!--page1 end-->
+  
+  
+  
+  
+  <div data-role="page" data-theme="b" id="pDetail" data-add-back-btn="true">
+  <div data-role="header">
+    <h1 id="hTitle">详页面细</h1>
+  </div>
+  <div data-role="content">
+  		<div id="divDetail" data-role="listview" data-inset="true"> </div>
+        <p><a href=# data-role="button" data-mini="true" data-inline="true" data-theme="b">预约</a></p>
+        <p id="divDetailIntro" >
+        </p>
+  </div>
+ </div>
+</body>
+</html>

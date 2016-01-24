@@ -1,0 +1,145 @@
+@charset "utf-8";
+/* CSS Document */
+
+.c{	
+}
+
+.pmb {
+    padding: 20px 20px 0;
+    position: relative;
+}
+.pmb li {
+    margin-bottom: 10px;
+    position: relative;
+	list-style:none outside none;
+}
+
+/*  url即小箭头的图标 */
+.pmt {
+    background:url("../images/pm.png") no-repeat scroll -13px -40px rgba(0, 0, 0, 0);
+    bottom: 0;
+    height: 7px;
+    left: -6px;
+    overflow: hidden;
+    position: absolute;
+    text-indent: -999px;
+    width: 7px;
+}
+
+.pmd {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: url("../images/pm-bg1.png") repeat-x scroll 0 0 #F0F0F0;
+    border-color: #E7E7E7 #BBBBBB #999999 #E7E7E7;
+    border-image: none;
+    border-radius: 10px 10px 10px 0;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 2px 2px 4px #DDDDDD;
+    float: left;
+    padding: 5px 8px;
+    word-wrap: break-word;
+}
+.pmd, .pmd img {
+    max-width: 292px;
+}
+* html .pmd {
+}
+* html .pmd img {
+}
+.pmd .quote {
+    background: url("../images/qa.gif") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+    color: #666666;
+    margin: 0;
+    overflow: hidden;
+    padding-left: 16px;
+}
+.pmd .quote blockquote {
+    background: url("../images/qz.gif") no-repeat scroll 100% 100% rgba(0, 0, 0, 0);
+    display: inline;
+    margin: 0;
+    padding-right: 16px;
+}
+.pmd .blockcode {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0);
+    color: #666666;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+}
+.pmd .blockcode code {
+    font-family: Monaco,Consolas,"Lucida Console","Courier New",serif;
+    font-size: 12px;
+    line-height: 1.8em;
+}
+* html .pmd .blockcode code {
+    font-family: "Courier New",serif;
+}
+.pmm .pmt {
+    background-position: 0 -47px;
+    left: auto;
+    right: -6px;
+}
+.pmm .pmd {
+    background:url("../images/pm-bg2.png") repeat-x scroll 0 0 #FEF5E7;
+    border-color: #FFC68C #F9D4A7 #F3BB65 #DDC4A9;
+    border-radius: 10px 10px 0;
+    box-shadow: -2px 2px 4px #DDDDDD;
+    float: right;
+}
+
+.pmb h4 {
+    text-align: center;
+}
+
+.cl:after {
+    clear: both;
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+}
+
+.cl {
+}
+
+body, ul, ol, li, dl, dd, p, h1, h2, h3, h4, h5, h6, form, fieldset, .pr, .pc {
+    margin: 0;
+    padding: 0;
+	list-style:none outside none;
+}
+* {
+    word-wrap: break-word;
+}
+
+#fileDiv span{ 
+font-size:12px;
+font-weight:normal;
+text-align:center;
+width:25%;
+height:40%;
+float:left;
+border:none;
+vertical-align:top;
+background-color:#CCC;
+padding:15px 0px;
+}
+
+#textDiv div{
+	vertical-align:middle;
+}
+
+#positionW{
+    
+   background:#333;
+   width:300px;
+   height:180px;
+   position:absolute;  
+   left:50%;  
+   top:50%;
+   margin: 0 auto;
+}
+
+

@@ -1,0 +1,77 @@
+<?php
+ $title='统一检索';
+ $this->headTitle($title);
+ ?>
+ <STYLE type="text/css">
+.searchout_tuwen {background: url("images/cn_bg.gif") repeat scroll 0 0 transparent;
+    border-color: #B0BFC6;
+    border-right: 1px solid #B0BFC6;
+    border-style: solid;
+    border-width: 1px;
+    color: #CCCCCC;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 31px;
+    margin: 5px 0 0;
+    text-align: center;
+    width: 938px;
+	}
+.Mtable {	
+	background-color: #E2EAF8;
+    border: 0 solid;
+    border-collapse: collapse;
+    text-align: left;
+	}
+.opac_title{
+	 color: #000000;
+    font-weight: bold;
+    height: 25px;
+    letter-spacing: 1pt;
+    text-align: center;
+	boder:1px;
+	}
+.td_color_1{
+	background-color: #F7FBFF;
+    text-align: left;
+	height="25"
+	}
+.td_color_2	{
+	background-color: #EBF0F2;
+    text-align: left;
+	height="25"
+	}
+</STYLE>
+<center>	
+<div id="searchout_tuwen">
+<?php echo $this->paginationControl($this->paginator,'Sliding','/JY-Library/search/page.phtml',array('Route'=>'Search','qtxt'=>$this->qtxt));?>
+
+<?php if(count($this->paginator)):?>
+<table width="938" class="Mtable">
+<tr class="opac_title">
+<td width="45">序号</td>
+<td width="258">题名</td>
+<td width="140">责任者</td>
+<td width="140">出版社</td>
+<td width="50">出版年</td>
+<td width="120">索书号</td>
+<td width="80">流通状态</td>
+</tr>
+<?php $i=0;foreach($this->paginator as $book):?>
+<tr class="<?php if($i%2==0) echo "td_color_2";else echo "td_color_1";?>" >
+    <td width="45" height="25"><?php echo $this->escapeHtml($book->no);?></td>
+    <td width="258" height="25"><a href="<?php echo $this->url('Search',array('action'=>'detail','id'=>$book->no));?>"><?php echo $this->escapeHtml($book->title);?></a></td>
+	<td width="140" height="25"><?php echo $this->escapeHtml($book->authors);?></td>
+	<td width="140" height="25"><?php echo $this->escapeHtml($book->publisher);?></td>
+	<td width="50" height="25"><?php echo $this->escapeHtml($book->pubdate);?></td>
+	<td width="120" height="25"><?php echo $this->escapeHtml($book->classno);?></td>
+	<td width="80" height="25"><?php echo $this->escapeHtml($book->status);?></td>
+	<td><img src="http://chart.apis.google.com/chart?chs=100x100&cht=qr&chld=L|0&chl=<?php echo $book->no;?>" alt="QR code" widhtHeight="50" widhtHeight="50" /></td>
+</tr>
+<?php $i++;endforeach;?>
+</table>
+<?php endif;?>
+
+</div>
+
+
+</center>

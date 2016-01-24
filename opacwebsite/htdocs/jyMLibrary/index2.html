@@ -1,0 +1,83 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<meta charset="UTF-8">
+	<title>New Claim</title> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.css" />
+	<link rel="stylesheet" href="css/colors.css">
+  <script src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+  <script src="http://code.jquery.com/mobile/1.0a2/jquery.mobile-1.0a2.min.js"></script>
+  
+
+</head> 
+<body> 
+
+<!-- Page starts here -->
+<div data-role="page" data-theme="b" id="page1">
+
+	<div data-role="header" id="hdrMain" name="hdrMain" data-nobackbtn="true">
+		<h1><img src="zf2-logo.png">广西建设职业技术学院移动图书馆</h1>
+	</div>
+
+	<div data-role="content" id="contentMain" name="contentMain">	
+	
+	<form id="form1">
+	
+	<div id="shipDiv" data-role="fieldcontain">
+		<label for="shipNo">关键词*</label>		
+		<input id="shipNo" name="shipNo_r" type="text" />
+	</div>
+
+  
+  	<div id="submitDiv" data-role="fieldcontain">    
+  	 <input type="submit" value="检索" data-inline="true"/>
+    </div>
+    </form>
+    <ul id="notesList" data-role="listview" data-inset="true">
+<li data-role="list-divider">结果：</li>
+<li id="noNotes">(无)</li>
+</ul>
+	</div><!-- contentMain -->
+  
+	<div data-role="footer" data-position="fixed" dataid="
+footernav">
+<div data-role="navbar">
+<ul>
+<li><a href="persistent_footer_index.html" class="ui-btnactive
+ui-state-persist">馆藏目录</a></li>
+<li><a href="persistent_footer_credits.html">
+数字阅读</a></li>
+<li><a href="persistent_footer_contact.html">
+个人中心</a></li>
+</ul>
+</div>
+</div>
+	
+	
+	
+	<script>
+	 
+    $(document).ready(function() {
+   
+    }); 
+	
+ 
+    
+    $('#form1').submit(function() {       
+        
+        // Submit the form
+        $.post("http://192.168.4.170/requestProcessor.php",$('#form1').serialize(), function(data){
+          alert(data);
+		  $("#noNotes").text(data+"ttq");
+        });        
+        return false;      
+    });    
+    
+  </script>
+</div> <!-- page1 -->
+
+
+<!-- Page ends here -->
+</body>
+</html>

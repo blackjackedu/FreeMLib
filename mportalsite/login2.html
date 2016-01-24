@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>登录</title>
+	<link rel="stylesheet" href="css/jquery.mobile.css">
+    <script type="text/javascript" src="js/jquery.js"></script>
+	<script type="text/javascript" src="js/jquery.mobile.js"></script>
+	<script type="text/javascript" src="js/service.js"></script>
+	<script type="text/javascript" src="js/mjs.js"></script>
+	<script>
+	var redirectURL;
+	
+	
+		function loginOnClick(){
+					var first = $('#id').val();
+					var two = $('#password').val();
+					showLoader();
+					$("#submitdd").attr('disabled', 'disabled');
+					login(first,two,onSuccess,onError);
+
+		} 
+   
+		function goPWPageOnClick(){
+					$.mobile.changePage("#pChagePW");
+
+		} 
+		function goLoginPageOnClick(){
+					$.mobile.changePage("#pLogin");
+
+		} 
+		function onSuccess(data){
+			hideLoader();
+			$("#submitdd").removeAttr('disabled');
+			data=eval('(' + data + ')');
+			if(data.status=="1")
+			{
+				ldb=new localDB();
+				ldb.setSID(data.sid);
+				ldb.setUserName(data.username);
+				//alert("记录SID"+data.sid);
+				ldb.setCardNo($('#id').val());
+				location.href='main.html';
+				
+			}	
+			$("#txtMessage").html(data.message);
+			$("#txtMessage").trigger("create");
+		}
+
+		function onError(data){
+				hideLoader();
+				$("#submitdd").removeAttr('disabled');
+				$("#txtMessage").html("连接错误");
+				$("#txtMessage").trigger("create");
+		} 
+
+		
+		function chnagePWOnClick(){
+					var d={cardno:'',pass:'',uname:'',newpass1:'',newpass2:''};
+					d.cardno=$('#cardno').val();
+					d.pass=$('#pass').val();
+					d.uname=$('#uname').val();
+					d.newpass1=$('#newpass1').val();
+					d.newpass2=$('#newpass2').val();
+					showLoader();
+					changePW(d,handleChangePW);
+
+		} 
+		function handleChangePW(da){
+				hideLoader();
+				da=eval('(' + da + ')');
+				if(da.status=="1")
+				{
+					ldb=new localDB();
+					ldb.setSID(da.sid);
+					ldb.setCardNo($('#id').val());
+				}
+				$("#txtMessage2").html(da.message);
+				$("#txtMessage2").trigger("create");
+		}
+
+		$(document).on("pagebeforeshow","#pLogin",function(){
+			ldb=new localDB();
+			var cno=ldb.getCardNo();
+			if(cno)$("#id").val(cno);
+			else $("#id").val("");
+			$("#password").val("");
+		})
+		$(document).on("pagebeforeshow","#pChagePW",function(){
+			ldb=new localDB();
+			var cno=ldb.getCardNo();
+			if(cno)$("#cardno").val(cno);
+			else $("#cardno").val("");
+			$("#pass").val("");
+			$("#uname").val("");
+			$("#newpass1").val("");
+			$("#newpass2").val("");
+			
+		})
+	</script>		
+</head>
+
+<body>
+
+<div data-role="page" id="pLogin" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>登录</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		
+            <input name="id" id="id" value="" placeholder="图书证号..." type="text">
+            <input name="password" id="password" value="" placeholder="密码..." autocomplete="off" type="password">
+            <button id="submitdd" class="ui-btn" onClick="loginOnClick()" style="background:#4F81BD">登录</button> 
+			<button id="btnGoPWPage" class="ui-btn" style="background:#4F81BD" onClick="goPWPageOnClick()">修改密码</button> 			
+        
+		<br/>
+		<ul>
+		<div id="txtMessage" style="color:#ff0000;"></div>
+		<li style="color:#ff0000;">注意：首次使用借阅证登录的读者请先修改初始密码。</li>
+		<li>1、持借阅证读者方可在线查询借书和预约情况。</li>
+		<li>2、根据本馆有关规定，本校教师可在线续借、预约。</li>
+		<li>3、请正确输入图书证号、登录密码。</li>
+		
+		</ul>
+		
+    </div>
+        
+
+	</div><!-- /content -->
+
+	
+</div><!-- /pList -->
+
+
+
+
+<div data-role="page" id="pChagePW" data-theme="a">
+
+	<div data-role="header">
+    <a href="#" class="ui-btn ui-shadow ui-corner-all ui-icon-carat-l ui-btn-icon-notext" data-rel="back"></a>
+		<h1>修改密码</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		
+            <input name="cardno" id="cardno" value="" placeholder="图书证号..." type="text">
+            <input name="pass" id="pass" value="" placeholder="当前密码..." autocomplete="off" type="password">
+			<input name="uname" id="uname" value="" placeholder="姓名..." type="text">
+			<input name="newpass1" id="newpass1" value="" placeholder="新密码..." autocomplete="off" type="password">
+			<input name="newpass2" id="newpass2" value="" placeholder="再次输入新密码..." autocomplete="off" type="password">
+            <button id="btnChangePW" class="ui-btn" onClick="chnagePWOnClick()" style="background:#4F81BD">提交修改</button>
+			<button id="btnGoLogin" class="ui-btn" onClick="goLoginPageOnClick()" style="background:#4F81BD">返回登录</button>			
+        
+		<br/>
+		<div id="txtMessage2" style="color:#ff0000;">...</div>
+		<ul>
+		<li>1、初始密码值与图书证号相同，请修改后使用，否则不能查看个人借阅记录及执行预约、续借等请求。</li>
+		<li>2、姓名必须填写真实姓名。</li>
+		<li>3、若丢失密码，请联系图书馆，申请重新设定。</li>
+		</ul>
+		
+    </div>
+        
+
+	</div><!-- /content -->
+
+	
+</div><!-- /pList -->
+
+
+</body>
+</html>

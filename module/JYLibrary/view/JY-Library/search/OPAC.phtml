@@ -1,0 +1,770 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0053)http://210.36.19.205:6666/opac_two/search2/search.jsp -->
+<HTML><HEAD><TITLE>OPAC WEB2.0</TITLE>
+<META content="text/html; charset=gb2312" http-equiv=Content-Type>
+<SCRIPT type=text/javascript src="/gx/prototype-1.4.0.js">
+</SCRIPT>
+
+<STYLE>.selectTip {
+	BORDER-BOTTOM: gold 1px solid; BORDER-LEFT: gold 1px solid; BACKGROUND-COLOR: #afeeee; BORDER-TOP: gold 1px solid; BORDER-RIGHT: gold 1px solid
+}
+</STYLE>
+
+<SCRIPT type=text/javascript>
+ var djConfig = { isDebug: true };
+</SCRIPT>
+
+<SCRIPT type=text/javascript src="/gx/dojo.js"></SCRIPT>
+
+<SCRIPT type=text/javascript>
+	dojo.require("dojo.dnd.*");
+	dojo.require("dojo.dnd.HtmlDragMove");
+	dojo.require("dojo.event.*");
+	dojo.addOnLoad(function ()
+	{
+		new dojo.dnd.HtmlDragMoveSource(dojo.byId("find_pw"));
+		new dojo.dnd.HtmlDragMoveSource(dojo.byId("login_window"));		    
+	});
+	dojo.require("dojo.widget.TabContainer");
+	dojo.require("dojo.widget.LinkPane");
+	dojo.require("dojo.widget.ContentPane");
+	dojo.require("dojo.widget.LayoutContainer");
+</SCRIPT>
+
+<SCRIPT type=text/javascript>
+	function clickHandler(panel, node)
+	{
+		//node.innerHTML = "单击了Tab页";
+		window.open("classifyquerytree.jsp");
+	}
+</SCRIPT>
+<LINK rel=stylesheet type=text/css href="/gx/styles.css"><LINK 
+rel=stylesheet type=text/css href="/gx/user_custom.css"><LINK 
+rel=stylesheet type=text/css href="/gx/css.css"><LINK 
+rel=stylesheet type=text/css href="/gx/style2.css">
+<SCRIPT language=JavaScript1.1 src=""></SCRIPT>
+
+<SCRIPT language=JavaScript>
+		
+				String.prototype.trim   =   function()
+		{
+				 //   用正则表达式将前后空格
+				 //   用空字符串替代。
+				 return   this.replace(/(^\s*)|(\s*$)/g,   "");
+		}
+
+
+		function ajax_login(){
+	
+			var str_login_type = document.form_title.login_type.value;
+			var str_barcode = document.form_title.barcode.value;
+			var str_password = document.form_title.password.value;
+			//alert(str_login_type+"#"+str_barcode+"#"+str_password);
+			var url = '/opac_two/include/login_app.jsp';
+			var params = "login_type=" + str_login_type+"&barcode="+str_barcode+"&password="+str_password;
+			var myAjax = new Ajax.Request(
+			url,
+			{	
+				method:'post',
+				parameters: params,
+				onComplete: showLogin,
+				asynchronous:true,
+				contentType:'application/x-www-form-urlencoded',
+				encoding:'ISO-8859-1'
+			});
+
+	
+		}
+
+		function ajax_login_float(){
+	
+			var str_login_type = document.float_login_window.login_type.value;
+			var str_barcode = document.float_login_window.barcode.value;
+			var str_password = document.float_login_window.password.value;
+			//alert(str_login_type+"#"+str_barcode+"#"+str_password);
+			var url = '/opac_two/include/login_app.jsp';
+			var params = "login_type=" + str_login_type+"&barcode="+str_barcode+"&password="+str_password;
+			var myAjax = new Ajax.Request(
+			url,
+			{	
+				method:'post',
+				parameters: params,
+				onComplete: showLogin,
+				asynchronous:true,
+				contentType:'application/x-www-form-urlencoded',
+				encoding:'ISO-8859-1'
+			});
+
+	
+		}
+
+		function showLogin(originalRequest){
+
+			
+			var login_info = originalRequest.responseText;
+
+			//alert(login_info);
+			if((login_info.trim()).indexOf("ok")==-1)
+				alert(login_info.trim());
+			location.reload(); 
+		
+			
+		
+		}
+
+        function openNewDiv(id){
+			if(document.getElementById(id).style.display=="none")
+				document.getElementById(id).style.display="";
+			else document.getElementById(id).style.display="none";
+        
+        }
+		
+        function closeNewDiv(id){
+        document.getElementById(id).style.display="none";
+        
+        } 
+		function openLoginDiv(){
+			 document.getElementById("login_window").style.display="";
+			 document.float_login_window.barcode.focus();
+		}
+		 function displayScreenSize()
+        {
+            var bodyWidth           =document.body.clientWidth;      //网页可见区域宽
+
+            var bodyHeight          =document.body.clientHeight;     //网页可见区域高
+			var loginwindowleft=bodyWidth/2-200;
+			var loginwindowbottom=bodyHeight/2-120;
+			//alert(loginwindowleft);
+			document.getElementById("login_window").style.left=loginwindowleft;
+			document.getElementById("login_window").style.bottom=loginwindowbottom;
+		}
+		
+		function change_login(id)
+		{	
+			//alert("1");
+			document.getElementById("barcode").color="";
+			document.getElementById("email").color="";
+			document.getElementById("e_card").color="";
+			document.getElementById(id).color="red";
+			document.float_login_window.login_type.value=id;
+		}
+</SCRIPT>
+
+<META name=GENERATOR content="MSHTML 8.00.6001.18702"></HEAD>
+<BODY onload=displayScreenSize(); leftMargin=0 topMargin=0 bgColor=#bdb76b>
+<CENTER><!--**************************************************登录悬浮框*********************************************************-->
+<DIV 
+style="Z-INDEX: 5; BORDER-BOTTOM: #b0bfc6 1px solid; POSITION: absolute; BORDER-LEFT: #b0bfc6 1px solid; WIDTH: 400px; DISPLAY: none; BACKGROUND: white; BORDER-TOP: #b0bfc6 1px solid; BORDER-RIGHT: #b0bfc6 1px solid" 
+id=login_window name="login_window">
+<DIV 
+style="BORDER-BOTTOM: #b0bfc6 0px solid; BORDER-LEFT: #b0bfc6 0px solid; WIDTH: 400px; BACKGROUND: #ccdaf8; FLOAT: left; HEIGHT: 50px; BORDER-TOP: #b0bfc6 0px solid; BORDER-RIGHT: #b0bfc6 0px solid" 
+id=login_1>
+<DIV style="MARGIN: 5px 5px 0px; FLOAT: left" id=login_2><IMG 
+src="OPAC%20WEB2_0_files/login_1.gif"> </DIV>
+<DIV 
+style="MARGIN: 15px 5px 0px; FLOAT: left; FONT-SIZE: 16px; FONT-WEIGHT: lighter" 
+id=login_2>登录 </DIV>
+<DIV style="MARGIN: 10px 10px 0px; FLOAT: right" id=login_2_1><A 
+onclick="openNewDiv('login_window')" 
+href="http://210.36.19.205:6666/opac_two/search2/search.jsp#"><IMG 
+src="OPAC%20WEB2_0_files/login_close.gif"></A> </DIV></DIV>
+<DIV 
+style="BORDER-BOTTOM: #b0bfc6 1px solid; TEXT-ALIGN: left; MARGIN: 0px; WIDTH: 380px; HEIGHT: 30px" 
+id=login_3><BR>
+<FORM id=float_login_window method=post name=float_login_window 
+action=/opac_two/include/login_app.jsp>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;<A 
+onclick="change_login('barcode')" 
+href="http://210.36.19.205:6666/opac_two/search2/search.jsp#"><FONT id=barcode 
+color=red>读者条码</FONT></A>&nbsp;|&nbsp;&nbsp;<A onclick="change_login('email')" 
+href="http://210.36.19.205:6666/opac_two/search2/search.jsp#"><FONT 
+id=email>E—mail</FONT></A>&nbsp;&nbsp;|&nbsp;<A 
+href="http://210.36.19.205:6666/opac_two/search2/search.jsp#"><FONT id=e_card 
+onclick="change_login('e_card')">一卡通</FONT></A>&nbsp;&nbsp;| <INPUT 
+id=login_type type=hidden name=login_type> </DIV>
+<DIV 
+style="BORDER-BOTTOM: #b0bfc6 1px solid; TEXT-ALIGN: center; MARGIN: 0px; WIDTH: 380px; BACKGROUND: white; HEIGHT: 100px" 
+id=login_4><BR>用户名：<INPUT 
+style="BORDER-BOTTOM: #aeb6bf 1px solid; BORDER-LEFT: #aeb6bf 1px solid; WIDTH: 120px; BACKGROUND: #ebf0f2; HEIGHT: 18px; COLOR: #747980; FONT-SIZE: 14px; BORDER-TOP: #aeb6bf 1px solid; BORDER-RIGHT: #aeb6bf 1px solid" 
+name=barcode><BR><BR>密&nbsp;&nbsp;&nbsp;码：<INPUT 
+style="BORDER-BOTTOM: #aeb6bf 1px solid; BORDER-LEFT: #aeb6bf 1px solid; WIDTH: 120px; BACKGROUND: #ebf0f2; HEIGHT: 18px; COLOR: #747980; FONT-SIZE: 14px; BORDER-TOP: #aeb6bf 1px solid; BORDER-RIGHT: #aeb6bf 1px solid" 
+type=password name=password><BR><BR><A 
+onclick="openNewDiv('login_window');ajax_login_float();" 
+href="http://210.36.19.205:6666/opac_two/search2/search.jsp#"><IMG 
+src="OPAC%20WEB2_0_files/login_login.gif"></A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<IMG 
+src="OPAC%20WEB2_0_files/login_quxiao.gif"> </FORM></DIV>
+<DIV 
+style="TEXT-ALIGN: left; LINE-HEIGHT: 20px; MARGIN: 0px; WIDTH: 380px; BACKGROUND: white; HEIGHT: 60px" 
+id=login_5>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;非读者条码用户请点击上部“E-mail”或“一卡通”选项卡登录。<BR>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;忘记密码吗了？请点击<A 
+onclick="openNewDiv('login_window');openNewDiv('find_pw');" 
+href="http://210.36.19.205:6666/opac_two/search2/search.jsp#">“找回密码”！</A> 
+</DIV></DIV><!--**************************************************找回密码*********************************************************-->
+<DIV>
+<TABLE border=0 width=938 height=90>
+  <TBODY>
+  <TR>
+    <TD height=90 background=OPAC%20WEB2_0_files/title.gif align=middle>
+      <DIV id=top_title>
+      <FORM onsubmit="javascript:return Juge(this)" method=post name=form_title 
+      action=/opac_two/include/login_app.jsp>
+      <TABLE>
+        <TBODY>
+        <TR>
+          <TD height=70 width="55%"></TD>
+          <TD width="45%"></TD></TR>
+        <TR>
+          <TD height=20 width="55%"></TD>
+          <TD width="45%" align=middle>用户名&nbsp;<INPUT class=input_text1 
+            tabIndex=3 name=barcode>&nbsp; 密码&nbsp;<INPUT class=input_text1 
+            tabIndex=4 type=password name=password> <SELECT 
+            style="WIDTH: 75px; HEIGHT: 18px" size=1 name=login_type> <OPTION 
+              selected value=barcode>读者条码</OPTION> <OPTION 
+              value=email>E-mail</OPTION> <OPTION value=e_card>一卡通</OPTION> 
+              <OPTION value=cx>管理员</OPTION></SELECT> &nbsp;&nbsp;<A 
+            onclick=ajax_login() 
+            href="http://210.36.19.205:6666/opac_two/search2/search.jsp#">登录</A>&nbsp;&nbsp;<A 
+            onclick="openNewDiv('find_pw')" 
+            href="http://210.36.19.205:6666/opac_two/search2/search.jsp#">忘记密码</A></FORM><!--**************************************************找回密码*********************************************************-->
+            <DIV 
+            style="Z-INDEX: 4; BORDER-BOTTOM: #b0bfc6 0px solid; POSITION: absolute; BORDER-LEFT: #b0bfc6 0px solid; DISPLAY: none; BACKGROUND: white; BORDER-TOP: #b0bfc6 0px solid; TOP: 190px; RIGHT: 530px; BORDER-RIGHT: #b0bfc6 0px solid; LEFT: auto" 
+            id=find_pw name="find_pw">
+            <TABLE border=0 cellSpacing=0 cellPadding=0 width=270 
+              align=center><TBODY>
+              <TR>
+                <TD width=270>
+                  <FORM id=find_pwd method=post name=find_pwd 
+                  action=/opac_two/include/find_pwd.jsp>
+                  <TABLE border=0 cellSpacing=0 cellPadding=0 width=270 
+                  align=center>
+                    <TBODY>
+                    <TR>
+                      <TD height=6 colSpan=8></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 height=1 colSpan=8></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD height=2 width=264 colSpan=3></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD class=p4 bgColor=#edf2fc height=24 width=264 
+                        colSpan=3>&nbsp;<FONT color=#2d5bbb><B>找回密码</B> -&gt; 
+                        <B>保密邮箱找回密码：</B></FONT></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD height=4 width=264 colSpan=3></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD class=p6 vAlign=center width=124 
+align=right>读者条码：</TD>
+                      <TD vAlign=center width=161><INPUT id=find_barcode 
+                        name=find_barcode></TD>
+                      <TD vAlign=center></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD height=4 width=264 colSpan=3></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#808080 height=1 width=264 colSpan=3></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD height=4 width=264 colSpan=3></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD class=p6 vAlign=center width=124 
+align=right>保密邮箱：</TD>
+                      <TD vAlign=center width=176><INPUT maxLength=64 
+                        name=email></TD>
+                      <TD vAlign=center></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD height=4 width=264 colSpan=3></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#808080 height=1 width=264 colSpan=3></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD height=4 width=264 colSpan=3></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR><!-- omit by chenyiwei on 2007/2/12 -->
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD height=2 width=264 colSpan=3></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#8eaef1 height=1 width=264 colSpan=3></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD class=p4 bgColor=#edf2fc height=45 vAlign=center 
+                      width=264 colSpan=3 align=middle>　　<INPUT style="CURSOR: hand" class=p1 onclick=javascript:document.find_pwd.submit(); value=确定 type=button name=Submit>&nbsp;&nbsp;&nbsp;<INPUT style="CURSOR: hand" class=p1 onclick="closeNewDiv('find_pw')" value=取消 type=button> 
+                      </TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 width=1></TD>
+                      <TD width=2></TD>
+                      <TD height=2 width=264 colSpan=3></TD>
+                      <TD width=2></TD>
+                      <TD bgColor=#ccdaf8 width=1></TD></TR>
+                    <TR>
+                      <TD bgColor=#ccdaf8 height=1 
+                  colSpan=8></TD></TR></TBODY></TABLE></FORM></TD></TR></TBODY></TABLE></DIV><!--**************************************************找回密码*********************************************************--></TD></TR></TBODY></TABLE></DIV></TD></TR>
+  <TR>
+    <TD height=18 align=middle><!--<div class="pages">	
+	<span><div class="title"><a href="/opac_two/search2/index.jsp">书刊检索</a></div></span>&nbsp;&nbsp;
+	<span><a href="/opac_two/newbook/queryIn.jsp" >新书通报</a></span>&nbsp;&nbsp;
+	<span><a href="/opac_two/serial/queryIn.jsp">期刊篇目检索</a></span>&nbsp;&nbsp;
+	<span><a href="/opac_two/reference/queryIn.jsp">课程参考书检索</a></span>&nbsp;&nbsp;
+	<span><a href="/opac_two/postinformation/list.jsp">信息发布</a></span>&nbsp;&nbsp;
+	<span><a href="/opac_two/thesis/queryIn.jsp">学位论文检索</a></span>&nbsp;&nbsp;
+	<span><a href="/opac_two/reader/login.jsp">我的图书馆</a></span>&nbsp;&nbsp;
+	<span><a href="/opac_two/top_new.jsp">排行榜</a></span>
+	<span><a href="/opac_two/application/m_index.jsp">后台管理</a></span>
+</div>	
+-->
+      <DIV id=top_menu><A 
+      href="http://210.36.19.205:6666/opac_two/search2/index.jsp">书刊检索</A> | <A 
+      href="http://210.36.19.205:6666/opac_two/newbook/liutongIn.jsp">新书通报</A> | 
+      <A href="http://210.36.19.205:6666/opac_two/serial/queryIn.jsp">期刊篇目检索</A> 
+      | <A 
+      href="http://210.36.19.205:6666/opac_two/reference/queryIn.jsp">课程参考书检索</A> 
+      | <A 
+      href="http://210.36.19.205:6666/opac_two/recommbuy/catalogList.jsp">购书推荐</A> 
+      | <A 
+      href="http://210.36.19.205:6666/opac_two/postinformation/list.jsp">信息发布</A> 
+      | <A 
+      href="http://210.36.19.205:6666/opac_two/thesis/queryIn.jsp">学位论文检索</A> | 
+      <A href="http://210.36.19.205:6666/opac_two/reader/infoList.jsp">我的图书馆</A> 
+      | <A href="http://210.36.19.205:6666/opac_two/top_new.jsp">排行榜</A> 
+    </DIV></TD></TR></TBODY></TABLE></DIV><!-- <a href="HTML/test.html" target="_blank"><img border="0" src="images/test.gif"  style="position:absolute;zindex=-1" id=me onmouseover="clearInterval(s);this.style.cursor='hand'"   onmouseout="s=setInterval('move()',130)" ></a>   
+  <script>   
+  dx=Math.ceil(Math.random()*10);   
+  dy=Math.ceil(Math.random()*10);   
+  function   move()   
+  {   
+  var str="";   
+  x=isNaN(parseInt(me.style.left))?0:parseInt(me.style.left);   
+  y=isNaN(parseInt(me.style.top))?0:parseInt(me.style.top);   
+  if(x+dx>document.body.clientWidth-me.width||x+dx<0)dx=-dx;   
+  if(y+dy>document.body.clientHeight-me.height||y+dy<0)dy=-dy;   
+  x+=dx;y+=dy;   
+  me.style.left=str+x+"px";   
+  me.style.top=str+y+"px";   
+  }   
+  s=setInterval("move()",130);   
+  </script> -->
+<SCRIPT language=JavaScript>
+<!--
+function change_class(){
+	document.getElementById("simple_search").className="simple_search_1";
+	document.getElementById("complex_search").className="complex_search_1";
+}
+function check(theForm) {//检索的判断	
+	var s_word=theForm.suchen_word.value;
+	var s_match=theForm.suchen_match.value;
+	var len =s_word.length;
+	if(s_word=="%")
+	{
+		alert("不支持 % 检索！请输入检索词！");
+		return false;
+	}
+
+    if((len<2)&&(s_match!="jq"))
+	{
+		alert("检索词过短，请输入长检索词或精确匹配！")
+		return false;
+	}
+	if(s_word=="%")
+	{
+		alert("不支持 % 检索！请输入检索词！");
+		return false;
+	}
+	
+	for(i=0;i<len;i++)
+	{
+		
+		s_word=s_word.replace(" ","");
+		s_word=s_word.replace("%","");
+		
+	}
+	if(s_word=="")
+	{
+		alert("请输入检索词！");
+		return false;
+	}	
+}
+//-->
+</SCRIPT>
+
+<CENTER>
+<TABLE border=0 width=938>
+  <TBODY>
+  <TR>
+    <TD vAlign=top width=150>&nbsp; </TD>
+    <TD vAlign=top align=middle>
+      <TABLE border=0 width=700 height=350 valign="top">
+        <TBODY>
+        <TR>
+          <TD vAlign=top>
+            <CENTER>
+            <CENTER>
+            <DIV id=seach_menu><!--检索选项模块-->
+            <DIV id=mainTabContainer selectedChild="contact" doLayout="false" 
+            dojoType="TabContainer">
+            <DIV id=contact dojoType="ContentPane" label="简单检索">
+            <FORM onsubmit="javascript:return check(this);" method=post 
+            name=suchen action=searchout.jsp>
+            <TABLE border=0 width=300><BR>
+              <TBODY>
+              <TR>
+                <TD align=right>检索词类型:&nbsp;</TD>
+                <TD><SELECT size=1 name=suchen_type> <OPTION selected 
+                    value=1>所有题名</OPTION> <OPTION value=2>出版社</OPTION> <OPTION 
+                    value=3>索书号</OPTION> <OPTION value=4>作者</OPTION> <OPTION 
+                    value=5>标准号</OPTION> <OPTION value=6>主题词</OPTION> <OPTION 
+                    value=7>图书条码</OPTION> <OPTION value=8>分类号</OPTION> <OPTION 
+                    value=9>题名缩拼</OPTION></SELECT> </TD></TR>
+              <TR>
+                <TD align=right>检索词:&nbsp;</TD><!--   	<td><input id="suchen_word" name="suchen_word" type="text" size="18" autocomplete="off" class=input_text value="" onBlur="Element.hide('brandTip')"> -->
+                <TD><INPUT id=suchen_word class=input_text size=18 
+                  name=suchen_word autocomplete="off"> <IMG 
+                  style="DISPLAY: none" id=Loadingimg 
+                  src="OPAC%20WEB2_0_files/indicator.gif"><BR>
+                  <DIV 
+                  style="BORDER-BOTTOM: menu 1px solid; POSITION: absolute; BORDER-LEFT: menu 1px solid; BACKGROUND-COLOR: #ffffcc; WIDTH: 120px; DISPLAY: none; BORDER-TOP: menu 1px solid; BORDER-RIGHT: menu 1px solid" 
+                  id=brandTip></DIV></TD></TR><!--
+<tr>
+	<td colspan=2 align=center >热门检索词：&nbsp;java &nbsp;science &nbsp;ajax </td>
+</tr>
+-->
+              <TR>
+                <TD align=right>匹配方式:&nbsp;</TD>
+                <TD><SELECT size=1 name=suchen_match> <OPTION selected 
+                    value=qx>前向匹配</OPTION> <OPTION value=mh>模糊匹配</OPTION> 
+                    <OPTION value=jq>精确匹配</OPTION></SELECT> </TD></TR>
+              <TR>
+                <TD align=right>资料类型:&nbsp;</TD>
+                <TD><SELECT name=recordtype> <OPTION selected 
+                    value=all>全部</OPTION> <OPTION value=##>所有类型</OPTION> <OPTION 
+                    value=01>中文图书</OPTION> <OPTION value=02>西文图书</OPTION> 
+                    <OPTION value=03>日文图书</OPTION> <OPTION 
+                    value=04>俄文图书</OPTION> <OPTION value=05>小语种图书</OPTION> 
+                    <OPTION value=11>中文期刊</OPTION> <OPTION 
+                    value=12>西文期刊</OPTION> <OPTION value=13>日文期刊</OPTION> 
+                    <OPTION value=14>俄文期刊</OPTION> <OPTION 
+                    value=21>中文声像</OPTION> <OPTION value=22>西文非书资料</OPTION> 
+                    <OPTION value=51>古籍图书</OPTION></SELECT> </TD></TR>
+              <TR>
+                <TD align=right>分馆名称:&nbsp;</TD>
+                <TD><SELECT name=library_id> <OPTION selected 
+                    value=all>所有分馆</OPTION> <OPTION value=A>广西大学图书馆</OPTION> 
+                    <OPTION value=B>广西大学分馆</OPTION></SELECT> </TD></TR><INPUT value=Ya 
+              type=hidden name=suchen_way> <INPUT value=all type=hidden 
+              name=suchen_way> 
+              <TR>
+                <TD align=right>显示方式:&nbsp;</TD>
+                <TD><INPUT value=wenzi CHECKED type=radio name=show_type>文字方式 
+                  <INPUT value=tuwen type=radio name=show_type>图文方式 </TD></TR>
+              <TR>
+                <TD colSpan=2 align=middle><INPUT value=确定 type=submit name=B1>&nbsp;&nbsp; <INPUT value=重写 type=reset name=B2>
+                  <P></P></TD></TR></TBODY></TABLE></FORM></DIV>
+            <DIV style="DISPLAY: none" id=intro dojoType="ContentPane" 
+            label="高级检索">
+            <FORM onsubmit="javascript:return check(this);" method=post 
+            name=suchen action=searchout.jsp>
+            <TABLE border=0 width=300><INPUT value=Ja type=hidden 
+              name=zuhejiansuo> 
+              <TBODY>
+              <TR>
+                <TD><SELECT size=1 name=suchen_type_1> <OPTION selected 
+                    value=title>题名</OPTION> <OPTION value=authors>作者</OPTION> 
+                    <OPTION value=publisher>出版社</OPTION></SELECT> </TD>
+                <TD><SELECT size=1 name=suchen_match_1> <OPTION selected 
+                    value=qx>前向匹配</OPTION> <OPTION value=mh>模糊匹配</OPTION> 
+                    <OPTION value=jq>精确匹配</OPTION></SELECT> </TD>
+                <TD><INPUT class=input_text size=25 name=suchen_word_1></TD>
+                <TD><SELECT size=1 name=luojiguanxi_1> <OPTION selected 
+                    value=qx>AND</OPTION></SELECT> </TD></TR>
+              <TR>
+                <TD><SELECT size=1 name=suchen_type_2> <OPTION selected 
+                    value=title>题名</OPTION> <OPTION value=authors>作者</OPTION> 
+                    <OPTION value=publisher>出版社</OPTION></SELECT> </TD>
+                <TD><SELECT size=1 name=suchen_match_2> <OPTION selected 
+                    value=qx>前向匹配</OPTION> <OPTION value=mh>模糊匹配</OPTION> 
+                    <OPTION value=jq>精确匹配</OPTION></SELECT> </TD>
+                <TD><INPUT class=input_text size=25 name=suchen_word_2></TD>
+                <TD><SELECT size=1 name=luojiguanxi_2> <OPTION selected 
+                    value=qx>AND</OPTION></SELECT> </TD></TR>
+              <TR>
+                <TD><SELECT size=1 name=suchen_type_3> <OPTION selected 
+                    value=title>题名</OPTION> <OPTION value=authors>作者</OPTION> 
+                    <OPTION value=publisher>出版社</OPTION></SELECT> </TD>
+                <TD><SELECT size=1 name=suchen_match_3> <OPTION selected 
+                    value=qx>前向匹配</OPTION> <OPTION value=mh>模糊匹配</OPTION> 
+                    <OPTION value=jq>精确匹配</OPTION></SELECT> </TD>
+                <TD><INPUT class=input_text size=25 name=suchen_word_3></TD><!-- <td>
+		<select name="luojiguanxi_2" size="1">
+				<option value="qx">AND</option>
+				
+			</select> 
+		</td> --></TR>
+              <TR>
+                <TD colSpan=2 align=right>资料类型:&nbsp;<!-- </td> 
+		<td> --> <SELECT name=recordtype> <OPTION selected 
+                    value=all>全部</OPTION> <OPTION value=##>所有类型</OPTION> <OPTION 
+                    value=01>中文图书</OPTION> <OPTION value=02>西文图书</OPTION> 
+                    <OPTION value=03>日文图书</OPTION> <OPTION 
+                    value=04>俄文图书</OPTION> <OPTION value=05>小语种图书</OPTION> 
+                    <OPTION value=11>中文期刊</OPTION> <OPTION 
+                    value=12>西文期刊</OPTION> <OPTION value=13>日文期刊</OPTION> 
+                    <OPTION value=14>俄文期刊</OPTION> <OPTION 
+                    value=21>中文声像</OPTION> <OPTION value=22>西文非书资料</OPTION> 
+                    <OPTION value=51>古籍图书</OPTION></SELECT> </TD><!-- </tr>
+
+	<tr> -->
+                <TD align=right>分馆名称:&nbsp;</TD>
+                <TD><SELECT name=library_id> <OPTION selected 
+                    value=all>所有分馆</OPTION> <OPTION value=A>广西大学图书馆</OPTION> 
+                    <OPTION value=B>广西大学分馆</OPTION></SELECT> </TD></TR><INPUT value=Ya 
+              type=hidden name=suchen_way> <INPUT value=all type=hidden 
+              name=suchen_way> 
+              <TR>
+                <TD align=right>显示方式:&nbsp;</TD>
+                <TD colSpan=3><INPUT value=wenzi CHECKED type=radio 
+                  name=show_type>文字方式 <INPUT value=tuwen type=radio 
+                  name=show_type>图文方式 </TD></TR>
+              <TR>
+                <TD colSpan=4 align=middle><INPUT value=确定 type=submit name=B1>&nbsp;&nbsp; <INPUT value=重写 type=reset name=B2>
+                  <P></P></TD></TR></TBODY></TABLE></FORM></DIV><A 
+            style="DISPLAY: none" dojoType="LinkPane" handler="clickHandler" 
+            refreshOnShow="true">分类浏览</A> 
+            <DIV style="DISPLAY: none" id=guanjihuajie dojoType="ContentPane" 
+            label="统一检索"><IFRAME hideFocus id=mainFrame height=300 
+            src="OPAC%20WEB2_0_files/search_nuify.htm" frameBorder=no 
+            width="100%" 
+            name=mainFrame></IFRAME></DIV></DIV><!--end of tab页--></DIV>
+            <CENTER>
+            <TABLE border=0>
+              <TBODY>
+              <TR>
+                <TD vAlign=top>
+                  <DIV class=content_07>
+                  <DIV class=content_07_tuijian>
+                  <DIV class=title>热门检索词</DIV>
+                  <DIV class=more><A 
+                  href="http://210.36.19.205:6666/opac_two/top_new.jsp" 
+                  target=_blank>更多...</A></DIV></DIV>
+                  <DIV id=paihang_list1>
+                  <UL style="WIDTH: 220px; FLOAT: left" class=stph_1>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/searchout.jsp?suchen_match=qx&amp;recordtype=all&amp;suchen_type=1&amp;suchen_way=Ya&amp;library_id=all&amp;show_type=wenzi&amp;client_id=gx&amp;suchen_word=高等数学"><B>1:</B>&nbsp;高等数学</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/searchout.jsp?suchen_match=qx&amp;recordtype=all&amp;suchen_type=1&amp;suchen_way=Ya&amp;library_id=all&amp;show_type=wenzi&amp;client_id=gx&amp;suchen_word=MATLAB"><B>2:</B>&nbsp;MATLAB</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/searchout.jsp?suchen_match=qx&amp;recordtype=all&amp;suchen_type=1&amp;suchen_way=Ya&amp;library_id=all&amp;show_type=wenzi&amp;client_id=gx&amp;suchen_word=JAVA"><B>3:</B>&nbsp;JAVA</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/searchout.jsp?suchen_match=qx&amp;recordtype=all&amp;suchen_type=1&amp;suchen_way=Ya&amp;library_id=all&amp;show_type=wenzi&amp;client_id=gx&amp;suchen_word=狼图腾"><B>4:</B>&nbsp;狼图腾</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/searchout.jsp?suchen_match=qx&amp;recordtype=all&amp;suchen_type=1&amp;suchen_way=Ya&amp;library_id=all&amp;show_type=wenzi&amp;client_id=gx&amp;suchen_word=计算机"><B>5:</B>&nbsp;计算机</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/searchout.jsp?suchen_match=qx&amp;recordtype=all&amp;suchen_type=1&amp;suchen_way=Ya&amp;library_id=all&amp;show_type=wenzi&amp;client_id=gx&amp;suchen_word=公务员"><B>6:</B>&nbsp;公务员</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/searchout.jsp?suchen_match=qx&amp;recordtype=all&amp;suchen_type=1&amp;suchen_way=Ya&amp;library_id=all&amp;show_type=wenzi&amp;client_id=gx&amp;suchen_word=平凡的世界"><B>7:</B>&nbsp;平凡的世界</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/searchout.jsp?suchen_match=qx&amp;recordtype=all&amp;suchen_type=1&amp;suchen_way=Ya&amp;library_id=all&amp;show_type=wenzi&amp;client_id=gx&amp;suchen_word=线性代数"><B>8:</B>&nbsp;线性代数</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/searchout.jsp?suchen_match=qx&amp;recordtype=all&amp;suchen_type=1&amp;suchen_way=Ya&amp;library_id=all&amp;show_type=wenzi&amp;client_id=gx&amp;suchen_word=管理学"><B>9:</B>&nbsp;管理学</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/searchout.jsp?suchen_match=qx&amp;recordtype=all&amp;suchen_type=1&amp;suchen_way=Ya&amp;library_id=all&amp;show_type=wenzi&amp;client_id=gx&amp;suchen_word=杜拉拉升职记"><B>10:</B>&nbsp;杜拉拉升职记</A> 
+                    </LI></UL></DIV></DIV></TD>
+                <TD vAlign=top>
+                  <DIV class=content_07>
+                  <DIV class=content_07_tuijian>
+                  <DIV class=title>热门借阅</DIV>
+                  <DIV class=more><A 
+                  href="http://210.36.19.205:6666/opac_two/top_new.jsp" 
+                  target=_blank>更多...</A></DIV></DIV>
+                  <DIV id=paihang_list1>
+                  <UL style="WIDTH: 220px; FLOAT: left" class=stph_1>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110158175&amp;sno=1"><B>1:</B>&nbsp;麦田里的守望者 
+                    = The catcher in the rye</A> </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110158209&amp;sno=1"><B>2:</B>&nbsp;不能承受的生命之轻 
+                    = L'insoutenable legerete de l'etre</A> </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110149357&amp;sno=1"><B>3:</B>&nbsp;物理化学解题指南</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110191796&amp;sno=1"><B>4:</B>&nbsp;茶花女</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110151027&amp;sno=1"><B>5:</B>&nbsp;《数学模型(第三版)》习题参考解答</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=01h0164397&amp;sno=1"><B>6:</B>&nbsp;高等数学习题全解指南 
+                    . 上册 , 同济?第6版</A> </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110214275&amp;sno=1"><B>7:</B>&nbsp;红楼梦 
+                    : 稀世绣像珍藏本 . 第一卷</A> </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110200458&amp;sno=1"><B>8:</B>&nbsp;雪国古都千只鹤</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=01h0247416&amp;sno=1"><B>9:</B>&nbsp;物理化学 
+                    (第5版) 同步辅导及习题全解</A> </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110102654&amp;sno=1"><B>10:</B>&nbsp;理论力学习题详解</A> 
+                    </LI></UL></DIV></DIV></TD>
+                <TD vAlign=top>
+                  <DIV class=content_07>
+                  <DIV class=content_07_tuijian>
+                  <DIV class=title>热门收藏</DIV>
+                  <DIV class=more><A 
+                  href="http://210.36.19.205:6666/opac_two/top_new.jsp" 
+                  target=_blank>更多...</A></DIV></DIV>
+                  <DIV id=paihang_list1>
+                  <UL style="WIDTH: 220px; FLOAT: left" class=stph_1>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=01h0305748&amp;sno=1"><B>1:</B>&nbsp;土木工程测量</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110158175&amp;sno=1"><B>2:</B>&nbsp;麦田里的守望者 
+                    = The catcher in the rye</A> </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110158209&amp;sno=1"><B>3:</B>&nbsp;不能承受的生命之轻 
+                    = L'insoutenable legerete de l'etre</A> </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110094614&amp;sno=1"><B>4:</B>&nbsp;狼图腾</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=01h0051520&amp;sno=1"><B>5:</B>&nbsp;人生若只如初见 
+                    : 古典诗词的美丽与哀愁</A> </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110155885&amp;sno=1"><B>6:</B>&nbsp;飘 
+                    = Gone with the wind . 上</A> </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110214275&amp;sno=1"><B>7:</B>&nbsp;红楼梦 
+                    : 稀世绣像珍藏本 . 第一卷</A> </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=01h0261071&amp;sno=1"><B>8:</B>&nbsp;世界因你不同 
+                    : 李开复自传 : the Kal-fu story</A> </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=01h0197874&amp;sno=1"><B>9:</B>&nbsp;杜拉拉升职记</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110200458&amp;sno=1"><B>10:</B>&nbsp;雪国古都千只鹤</A> 
+                    </LI></UL></DIV></DIV></TD>
+                <TD vAlign=top>
+                  <DIV class=content_07>
+                  <DIV class=content_07_tuijian>
+                  <DIV class=title>热门评价</DIV>
+                  <DIV class=more><A 
+                  href="http://210.36.19.205:6666/opac_two/top_new.jsp" 
+                  target=_blank>更多...</A></DIV></DIV>
+                  <DIV id=paihang_list1>
+                  <UL style="WIDTH: 220px; FLOAT: left" class=stph_1>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0181000520&amp;sno=1"><B>1:</B>&nbsp;四书章句集注</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=01d0021688&amp;sno=1"><B>2:</B>&nbsp;百年孤独</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=01h0261071&amp;sno=1"><B>3:</B>&nbsp;世界因你不同 
+                    : 李开复自传 : the Kal-fu story</A> </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110230138&amp;sno=1"><B>4:</B>&nbsp;地底三万尺</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=01h0310162&amp;sno=1"><B>5:</B>&nbsp;VB语言程序设计实验指导与习题解答</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110127385&amp;sno=1"><B>6:</B>&nbsp;三口棺材</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=11d0000046&amp;sno=1"><B>7:</B>&nbsp;电脑爱好者</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110200458&amp;sno=1"><B>8:</B>&nbsp;雪国古都千只鹤</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=0110232776&amp;sno=1"><B>9:</B>&nbsp;新派武侠小说研究</A> 
+                    </LI>
+                    <LI><A title="" 
+                    href="http://210.36.19.205:6666/opac_two/search2/s_detail.jsp?sid=01h0160408&amp;sno=1"><B>10:</B>&nbsp;大象的眼泪 
+                    = Water for elephants</A> 
+            </LI></UL></DIV></DIV></TD></TR></TBODY></TABLE></CENTER></CENTER></CENTER></TD></TR></TBODY></TABLE></TD>
+    <TD vAlign=top width=150>&nbsp; </TD></TR></TBODY></TABLE></CENTER>
+<TABLE border=0 width=938 height=80><!--
+<tr><td  align=right height="1" background="/opac_two/images/doc_01.gif"></td></tr>
+<tr>
+<td align=center height=18><a href="http://www.lib.gxu.edu.cn/content/web/dhzx.asp" target="_blank">联系我们</a></td>
+</tr>
+-->
+  <TBODY>
+  <TR>
+    <TD height=100 align=middle>
+      <DIV id=top_bottom>
+      <TABLE border=0 cellSpacing=0 cellPadding=0 width="100%" height=100>
+        <TBODY>
+        <TR>
+          <TD height=20>
+            <DIV align=center><A href="http://www.lib.gxu.edu.cn/" 
+            target=_blank><FONT color=white>广西建设职业技术学院</FONT></A>　|　 <A 
+            href="http://210.36.19.205:6666/opac_two/admin.jsp" 
+            target=_blank><FONT color=white>管理入口</FONT></A></DIV></TD></TR>
+        <TR>
+          <TD height=20>
+            <DIV align=center><FONT color=white>广西建设职业技术学院 版权所有 All Rights 
+            Reserved</FONT></DIV></TD></TR>
+        <TR>
+          <TD height=20>
+            <DIV align=center><A href="http://www.miibeian.gov.cn/"><FONT 
+            color=white>京ICP备09032139号</FONT></A></DIV></TD></TR></TBODY></TABLE></DIV></TD></TR></TBODY></TABLE></CENTER><!-- <script src="../js/tip.js" type="text/javascript">
+</script> --></BODY></HTML>

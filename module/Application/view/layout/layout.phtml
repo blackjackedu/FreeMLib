@@ -1,0 +1,36 @@
+<?php echo $this->doctype(); ?>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle($this->translate('建设类国家标准数据库-广西建设职业技术学院图书馆'))->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?php echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0') ?>
+
+        <!-- Le styles -->
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/images/favicon.ico'))
+                        ->prependStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css')
+                        ->prependStylesheet($this->basePath() . '/css/style.css')
+                        ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css')
+						->prependStylesheet($this->basePath() . '/css/gbdb.css')?>
+
+        <!-- Scripts -->
+        <?php echo $this->headScript()->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',))
+                                      ->prependFile($this->basePath() . '/js/bootstrap.min.js')
+                                      ->prependFile($this->basePath() . '/js/jquery.min.js') ?>
+
+    </head>
+    <body style="padding-top:0;">
+
+        <div class="container">
+			<a href="/" ><img src='/images/banner.png' /><div style="float:right;padding-top:30px;"></a><a href="/">&nbsp;检索首页</a>&nbsp;<a href="<?php echo $this->url('Search',array('action'=>'feedback'));?>">&nbsp;意见反馈&nbsp;</a><a href="<?php echo $this->url('Search',array('action'=>'help'));?>">&nbsp;使用帮助&nbsp;</a></div>
+            <?php echo $this->content; ?>
+            <hr>
+            <footer>
+				<p>说明：建议使用IE7以上版本，推荐使用IE8,Firefox,Chrome；本系统目前尚属调试阶段，数据还在整理中，如果发现数据有误，请向我们反馈。 </p>
+                <p>&copy; 广西建设职业技术学院图书馆 </p>
+            </footer>
+        </div> <!-- /container -->
+        <?php echo $this->inlineScript() ?>
+    </body>
+</html>

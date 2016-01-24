@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>广西建设职业技术学院移动图书馆</title>
+<link rel="stylesheet" href="js/jq/jquery.mobile-1.0a2.min.css">
+<style type="text/css">
+.homeb1 {	
+	height: 120px;
+	width: 120px;
+	float: left;
+	margin: 4px;
+	display: block;
+}
+.homeb2 {
+	height: 150px;
+	width: 150px;
+	float: left;
+	margin: 4px;
+	display: block;
+}
+.homeb3 {
+	height: 150px;
+	width: 150px;
+	float: left;
+	margin: 4px;
+	display: block;
+}
+.homeb4 {
+	height: 150px;
+	width: 150px;
+	float: left;
+	margin: 4px;
+	display: block;
+}
+.homebTxt
+{
+	font-size:24px;
+	font-weight:bold;
+	position:relative;
+	top:100px;
+	left:10px;
+	color:#FFF;
+	float:left;
+}
+.homebImg{
+	top:12px;
+	right:12px;
+	position:relative;
+}
+
+.news {
+	float: left;
+	border: thin dotted #333;
+	clear: both;
+	width:320px;
+}
+.LiteralTitlelink {
+    background: url("file:///D|/jyMobile/skin/hd.gif") no-repeat scroll 0 8px #FFFFFF;
+    float: left;
+	 margin: 0;
+    padding: 0;
+	text-align: left;
+	 font-size: 12px;
+}
+.LiteralTitlelink li{
+	margin:0;
+	padding:0;
+
+}
+</style>
+<script src="js/jq/jquery-1.4.4.min.js"></script>
+<script src="js/json2.js"></script>
+<script src="js/jq/jquery.mobile-1.0a2.min.js"></script>
+
+<script>
+$(document).bind("mobileinit",function() {
+
+$.mobile.allowCrossDomainPages = true;
+
+
+});
+
+$(document).ready(function() {
+	/*var script=this.createElement('script');
+script.src="http://192.168.4.170/js/cs.js";
+this.body.appendChild(script);*/
+//alert($.mobile.ajaxEnabled);
+	/*$.getJSON('http://192.168.4.185/search/getNews.php', function(data) {
+		alert(data);
+		$.each(data, function(i, field){
+      			$("#divNews").append("<a href='"+field["href"]+"'>"+field["title"]+"</a><br/>");
+    		});
+	});*/
+
+
+	$.support.cors=true;
+	$.mobile.allowCrossDomainPages=true;
+	
+	 var url = "http://192.168.4.170/search/crossDomainTest?symbol=IBM&callback=?";  
+            $.getJSON(url, function(retData){ 
+                var retData = retData.data;
+                alert(retData) ;               
+                });
+				
+	$.get("http://192.168.4.170/search/getNews",
+		function(data){
+			
+			var data2 = eval('(' + data + ')');
+			//var data2=JSON.parse('(' + data + ')');
+			//alert(data2.length);
+			//var data2=JSON.parse(data);
+			for(var i=0;i<data2.length;i++)
+			{
+				$("#divNews").append("<a  rel='external' href='news.html?url="+data2[i].href+"'>"+data2[i].title+"</a><br/>");
+			}
+			//$("#divNews").html(data);
+		}); 
+
+    
+});
+</script>
+</head>
+<body>
+ 
+
+<!-- Page starts here -->
+<div data-role="page" data-theme="b" id="page1">
+  <div data-role="header" id="hdrMain" name="hdrMain" data-nobackbtn="true">
+    <h1>广西建设职业技术学院移动图书馆</h1>
+  </div>
+  <div data-role="content" id="contentMain" name="contentMain">
+  <div class="homeCenter">
+   <div class="homeb1">
+<a href="A.html" rel='external'>
+	<img alt="馆藏资源" width="120" height="120" src="images/homeButton1.png" />
+    </a>
+</div>
+
+ <div class="homeb1">
+<a href="B.html" rel='external'>
+	<img alt="电子资源" width="120" height="120" src="images/homeButton2.png" />
+    </a>
+</div>
+
+<div class="homeb1">
+<a href="index.html">
+	<img alt="我的书房"  width="120" height="120" src="images/homeButton3.png" />
+    </a>
+</div>
+
+<div class="homeb1">
+<a href="/index.html">
+	<img alt="软件设置" width="120" height="120" src="images/homeButton4.png" />
+    </a>
+</div>
+
+ <br/>  
+<div class="news">
+<span>最新通知</span>
+<div id="divNews">
+
+</div>
+</div>
+
+   </div>
+   
+   
+   </div>
+  <!-- contentMain -->
+</body>
+</html>

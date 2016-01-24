@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>广西建设职业技术学院移动图书馆</title>
+<link rel="stylesheet" href="js/jq/jquery.mobile-1.0a2.min.css">
+<style type="text/css">
+.banner {
+	background-image: url(img/logo.png);
+}
+</style>
+<script src="js/jq/jquery-1.4.4.min.js"></script>
+<script src="js/jq/jquery.mobile-1.0a2.min.js"></script>
+<script>
+function jsLoad(jId, url, callBack)
+{
+    var version = 0;
+    if (navigator.appName.indexOf('Internet Explorer') != -1) {
+        var temp = navigator.appVersion.split('MSIE');
+        version = parseInt(temp[1]);
+    }
+
+    var js = document.getElementById(jId);
+    js.setAttribute('type', 'text/javascript');
+    js.setAttribute('src', url);
+    js.onload = js.onreadystatechange = function()
+    {
+        if (js.readyState && version > 0) {
+            if (version <= 6) {
+                if (/complete/i.test(js.readyState)) {
+                    return callBack();
+                }
+            } else {
+                if (/loaded/i.test(js.readyState)) {
+                    return callBack();
+                }
+            }
+        } else {
+            return callBack();
+        }
+    }
+}
+function myecho()
+{
+    alert(data);
+	$("#contentMain").append(data);
+}
+</script>
+</head>
+<body>
+<script id="myid"></script>
+<script>
+$(document).ready(function() {	 
+	//$.support.cors=true;
+	//$.mobile.allowCrossDomainPages=true;
+	//$.get("http://192.168.4.170/search/getLoanRecord",
+	//	function(data){
+	//		alert(data);
+	//		$("#contentMain").append(data);
+	//}); 
+	//var url = 'http://192.168.4.170/search/getLoanRecord';
+	//jsLoad('myid', url, myecho);
+		$.ajax({
+			type: "get",
+			url: "http://192.168.4.170/search/getLoanRecord",
+			crossDomain :true,
+ 			dataType:"jsonp",
+ 			jsonp: 'jsonpCallback',
+ 			jsonpCallback:'jsonpCallback',
+			success: function(data, textStatus){
+				alert(data);
+				var data2=data;
+				for(var i=0;i<data2.length;i++)
+				{
+					$("#contentMain").append("<li>"+data2[i].title+"</li>");
+				}
+			}
+		});
+});
+</script>
+<!-- Page starts here -->
+<div data-role="page" data-theme="b" id="page1"  data-add-back-btn="true">
+  <div data-role="header">
+    <h1>借阅信息</h1>
+  </div>
+  <div data-role="content" id="contentMain" name="contentMain">
+    
+</div> <!--page1 contend end-->
+ </div> <!--page1 end-->
+  
+  
+</body>
+</html>

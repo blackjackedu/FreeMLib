@@ -175,7 +175,9 @@ class OPACSearchController extends AbstractActionController
 	{
 		header('Access-Control-Allow-Origin: *');
 		header('Content-Encoding: plain');
-		
+		//$un='J00425';
+		//$pw='104673317';
+		//tang A209798,123456
 		$lm=LoginModel::getLoginModel();
 		$rs=Array();
 		if($lm->auth)
@@ -252,7 +254,10 @@ class OPACSearchController extends AbstractActionController
 		$this->checkLogin();
 		header('Access-Control-Allow-Origin: *');
 		header('Content-Encoding: plain');
-		
+		//$un='J00425';
+		//$pw='104673317';
+		//tang A209798,123456
+		//LoginModel::logout();
 		$rs=Array();
 		$lm=LoginModel::getLoginModel();
 		
@@ -333,7 +338,8 @@ class OPACSearchController extends AbstractActionController
 	{
 		header('Access-Control-Allow-Origin: *');
 		header('Content-Encoding: plain');
-			
+		//密码字段出现在一个不安全的页面中（http://）。这是一个可能导致用户登录凭据被窃取的安全风险。
+				
 		//参数检查
 		$cardno=$_REQUEST['cardno'];
 		if(!isset($cardno)||$cardno=="")exit();
@@ -367,6 +373,7 @@ class OPACSearchController extends AbstractActionController
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_POST, 1);
 			$curlPost = 'cardno='.urlencode($cardno).'&pass='.urlencode($pass).'&uname='.urlencode($uname).'&newpass1='.urlencode($newpass1).'&newpass2='.urlencode($newpass2).'&query=query';
+			//cardno=J00425&pass=104673317&uname=&newpass1=&newpass2=&query=query
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
 			// 3. 执行并获取HTML文档内容
 			$output = curl_exec($ch);
@@ -510,7 +517,10 @@ class OPACSearchController extends AbstractActionController
 		$this->checkLogin();
 		header('Access-Control-Allow-Origin: *');
 		header('Content-Encoding: plain');
-		
+		//$un='J00425';
+		//$pw='104673317';
+		//tang A209798,123456
+		//LoginModel::logout();
 		$rs=Array();
 		$lm=LoginModel::getLoginModel();
 		
@@ -526,7 +536,8 @@ class OPACSearchController extends AbstractActionController
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_POST, 1);
 			$curlPost = 'cardno='.urlencode($un).'&pass='.urlencode($pw).'&uname=&newpass1=&newpass2=&query=query';
-			
+			//$curlPost = 'cardno='.$un.'&pass='.$pw.'&uname=&newpass1=&newpass2=&query=query';
+			//cardno=J00425&pass=104673317&uname=&newpass1=&newpass2=&query=query
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
 			// 3. 执行并获取HTML文档内容
 			$output = curl_exec($ch);

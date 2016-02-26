@@ -1,4 +1,5 @@
 <?php
+// module/Album/src/Album/Controller/AlbumController.php:
 namespace JYLibrary\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
@@ -12,7 +13,12 @@ use Zend\Session\Container;
 use Zend\Http\Header\ContentType;
 
 class SearchController extends AbstractActionController
-{
+{		
+	public function indexAction()
+	{
+		echo "<h1>JYLibrary安装成功.<h1>";
+		exit();
+	}
 	public function unifyAction()
 	{
 		$vm=new ViewModel();
@@ -208,7 +214,8 @@ class SearchController extends AbstractActionController
 			curl_setopt($ch, CURLOPT_URL, "http://book.m.5read.com/search?channel=search&sw=".$word."&json=mjson&Pages=1&fenleiID=&Field=&searchtype=0&Sort=0&ecode=GBK&jpagesize=0");
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_COOKIE , 'JSESSIONID=93CBA41F58CCC8A099C8437620684EA2.irdmblhome72a; mgid=274; maid=26; msign_dsr=1383181567469;')
+			curl_setopt($ch, CURLOPT_COOKIE , 'JSESSIONID=93CBA41F58CCC8A099C8437620684EA2.irdmblhome72a; mgid=274; maid=26; msign_dsr=1383181567469; mduxiu=musername%2c%3dblmobile%2c%21muserid%2c%3d1000086%2c%21mcompcode%2c%3d1015%2c%21menc%2c%3d1004A7243EE4874349443B9F1A45CDAE; xc=4; mmr_enc=C29455C9E656BEA8FAC4A5B4334C5A6E; mmr_userid=87695; 3gemail=10465069%40qq%2ecom; JSESSIONID=F8A830816A7074CACC2BEBBC694DDF07.tomcat1');
+			//curl_setopt($ch, CURLOPT_COOKIE , 'JSESSIONID=6A15B0F9F365B5CF296BA06535E854FA.irdmblhome72a;JSESSIONID=A7D37743CE1860B61EE58D788B5852BD.tomcat1');
 			curl_setopt($ch, CURLOPT_USERAGENT, "Apache-HttpClient/UNAVAILABLE (java 1.4)");
 
 			// 3. 执行并获取HTML文档内容
@@ -216,18 +223,20 @@ class SearchController extends AbstractActionController
 			curl_close($ch);
 			// 4. 释放curl句柄
 			//%E5%B1%B1%E4%B8%9C%E5%A4%A7%E5%AD%A6
-			
+			//http://book.m.5read.com/search?channel=search&sw=%C9%BD%B6%AB%B4%F3%D1%A7&json=mjson&Pages=1&fenleiID=&Field=&searchtype=0&Sort=0&ecode=GBK&jpagesize=0
+			//http://book.m.5read.com/search?channel=search&sw=%C9%BD%B6%AB%B4%F3%D1%A7&json=mjson&Pages=1&fenleiID=&Field=&searchtype=0&Sort=0&ecode=GBK&jpagesize=0
+			//JSESSIONID=93CBA41F58CCC8A099C8437620684EA2.irdmblhome72a; mgid=274; maid=26; msign_dsr=1383181567469; mduxiu=musername%2c%3dblmobile%2c%21muserid%2c%3d1000086%2c%21mcompcode%2c%3d1015%2c%21menc%2c%3d1004A7243EE4874349443B9F1A45CDAE; xc=4; mmr_enc=C29455C9E656BEA8FAC4A5B4334C5A6E; mmr_userid=87695; 3gemail=10465069%40qq%2ecom; JSESSIONID=F8A830816A7074CACC2BEBBC694DDF07.tomcat1
 		}else if($type=='newspaper')
 		{
-		
+		//http://newspaper.m.5read.com/searchNP?channel=searchNP&sw=%C4%CF%B9%FA&json=mjson&Pages=1&fenleiID=&Field=&searchtype=0&isort=&ecode=GBK&jpagesize=0
 			$ch = curl_init();
 			// 2. 设置选项，包括URL
 			curl_setopt($ch, CURLOPT_URL, "http://newspaper.m.5read.com/searchNP?channel=searchNP&sw=".$word."&json=mjson&Pages=1&fenleiID=&Field=&searchtype=0&isort=&ecode=GBK&jpagesize=0");
-			
+			//curl_setopt($ch, CURLOPT_URL, "http://newspaper.m.5read.com/searchNP?channel=searchNP&sw=%C4%CF%B9%FA&json=mjson&Pages=1&fenleiID=&Field=&searchtype=0&isort=&ecode=GBK&jpagesize=0");
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($ch, CURLOPT_COOKIE , 'JSESSIONID=F1AB611181CFE54E2D2AE18A91964A47.irdmblhome72a; mgid=274; maid=26; msign_dsr=1383194450564;');
-			
+			curl_setopt($ch, CURLOPT_COOKIE , 'JSESSIONID=F1AB611181CFE54E2D2AE18A91964A47.irdmblhome72a; mgid=274; maid=26; msign_dsr=1383194450564; mduxiu=musername%2c%3dblmobile%2c%21muserid%2c%3d1000086%2c%21mcompcode%2c%3d1015%2c%21menc%2c%3dC1F015273230F02B48E5E10C85D083B5; xc=4; mmr_enc=C29455C9E656BEA8FAC4A5B4334C5A6E; mmr_userid=87695; 3gemail=10465069%40qq%2ecom');
+			//curl_setopt($ch, CURLOPT_COOKIE , 'JSESSIONID=6A15B0F9F365B5CF296BA06535E854FA.irdmblhome72a;JSESSIONID=A7D37743CE1860B61EE58D788B5852BD.tomcat1');
 			curl_setopt($ch, CURLOPT_USERAGENT, "Apache-HttpClient/UNAVAILABLE (java 1.4)");
 
 			// 3. 执行并获取HTML文档内容
@@ -235,7 +244,8 @@ class SearchController extends AbstractActionController
 			curl_close($ch);
 		}
 		header('Content-Encoding: plain');
-		
+		//header('Content-type: text/json');
+		//$output=file_get_contents("http://book.m.5read.com/search?channel=search&sw=%C9%BD%B6%AB%B4%F3%D1%A7&json=mjson&Pages=1&fenleiID=&Field=&searchtype=0&Sort=0&ecode=GBK&jpagesize=0");
 		echo $output;
 		exit();
 	}
@@ -300,7 +310,9 @@ class SearchController extends AbstractActionController
 	//馆藏查询
 	public function getBookAction()
 	{
-		
+		//http://192.168.4.152:82/cgi-win/tcgi.exe
+		//header('Access-Control-Allow-Origin: *');
+		//$url='惊奇';
 		$url=$_GET['word'];
 		//$url=urldecode($url);
 		$url=iconv("utf-8","gbk//ignore",$url);//按GBK来做URL编码
@@ -308,6 +320,7 @@ class SearchController extends AbstractActionController
 		$word=$url;
 		//echo $word;
 		$ch = curl_init();
+		//curl_setopt($ch, CURLOPT_URL, "http://192.168.4.152:82/cgi-win/tcgi.exe");
 		curl_setopt($ch, CURLOPT_URL, "http://192.168.4.152:82/cgi-win/s3trs.exe");
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -506,14 +519,19 @@ class SearchController extends AbstractActionController
 			echo '未登录';
 			exit();
 		}
-		
+		//$un='J00425';
+		//$pw='104673317';
+		//tang A209798,123456
 		$ch = curl_init();
 		// 2. 设置选项，包括URL
+		//curl_setopt($ch, CURLOPT_URL, "http://192.168.4.152:82/cgi-win/s3trs.exe");
 		curl_setopt($ch, CURLOPT_URL, "http://192.168.4.152:82/cgi-win/service.exe");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		$curlPost = 'cardno='.urlencode($un).'&pass='.urlencode($pw).'&uname=&newpass1=&newpass2=&query=query';
+		//$curlPost = 'cardno='.$un.'&pass='.$pw.'&uname=&newpass1=&newpass2=&query=query';
+		//cardno=J00425&pass=104673317&uname=&newpass1=&newpass2=&query=query
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
 		// 3. 执行并获取HTML文档内容
 		$output = curl_exec($ch);

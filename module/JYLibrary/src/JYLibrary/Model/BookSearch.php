@@ -5,8 +5,8 @@ class BookSearch
 	protected function getDB()
 	{
 		
-		$link = @sybase_connect('sulcmis3', 'sa', '*****') or die("不能连接数据库!");
-		//连接数据库，第一空必须写服务名称，不能是ip;
+		$link = @sybase_connect('sulcmis3', 'sa', '123456') or die("不能连接数据库!");
+		//$link = @sybase_connect('sulcmis3', 'sa', '123456') or die("Could not connect !");  //连接数据库，第一空必须写服务名称，不能是ip;
 		$db = @sybase_select_db("sulcmis",$link) or  die("数据库没有选择");
 		echo "getDB";
 		echo $link;

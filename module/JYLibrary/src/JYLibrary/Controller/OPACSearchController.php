@@ -365,7 +365,6 @@ class OPACSearchController extends AbstractActionController
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_POST, 1);
 			$curlPost = 'cardno='.urlencode($cardno).'&pass='.urlencode($pass).'&uname='.urlencode($uname).'&newpass1='.urlencode($newpass1).'&newpass2='.urlencode($newpass2).'&query=query';
-			//cardno=J00425&pass=104673317&uname=&newpass1=&newpass2=&query=query
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
 			// 3. 执行并获取HTML文档内容
 			$output = curl_exec($ch);

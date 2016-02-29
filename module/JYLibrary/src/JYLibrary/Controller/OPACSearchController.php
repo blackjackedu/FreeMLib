@@ -92,7 +92,6 @@ class OPACSearchController extends AbstractActionController
 		//echo $word;
 		if(!isset($word)||$word=="")exit();
 		$ch = curl_init();	
-		//http://192.168.4.152:82/cgi-win/tcgid.exe?s2494r20w%C8%FD%B9%FA%D1%DD%D2%E5
 		
 		//对于已登录的，先登录，再检索，这样能得到预约信息
 		$lm=LoginModel::getLoginModel();
@@ -114,7 +113,6 @@ class OPACSearchController extends AbstractActionController
 		}
 		
 		curl_setopt($ch, CURLOPT_URL, "http://192.168.4.152:82/cgi-win/tcgid.exe?".$word);
-		//curl_setopt($ch, CURLOPT_URL, "http://192.168.4.152:82/cgi-win/tcgid.exe?s2495r20w%C8%FD%B9%FA%D1%DD%D2%E5");
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch,CURLOPT_COOKIEFILE,'/tmp/cookie'); 
@@ -175,9 +173,7 @@ class OPACSearchController extends AbstractActionController
 	{
 		header('Access-Control-Allow-Origin: *');
 		header('Content-Encoding: plain');
-		//$un='J00425';
-		//$pw='104673317';
-		//tang A209798,123456
+
 		$lm=LoginModel::getLoginModel();
 		$rs=Array();
 		if($lm->auth)
@@ -254,10 +250,7 @@ class OPACSearchController extends AbstractActionController
 		$this->checkLogin();
 		header('Access-Control-Allow-Origin: *');
 		header('Content-Encoding: plain');
-		//$un='J00425';
-		//$pw='104673317';
-		//tang A209798,123456
-		//LoginModel::logout();
+
 		$rs=Array();
 		$lm=LoginModel::getLoginModel();
 		
@@ -267,7 +260,6 @@ class OPACSearchController extends AbstractActionController
 			
 			$ch = curl_init();
 			// 2. 设置选项，包括URL
-			//curl_setopt($ch, CURLOPT_URL, "http://192.168.4.152:82/cgi-win/s3trs.exe");
 			curl_setopt($ch, CURLOPT_URL, "http://192.168.4.152:82/cgi-win/service.exe");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_HEADER, 0);
@@ -517,10 +509,7 @@ class OPACSearchController extends AbstractActionController
 		$this->checkLogin();
 		header('Access-Control-Allow-Origin: *');
 		header('Content-Encoding: plain');
-		//$un='J00425';
-		//$pw='104673317';
-		//tang A209798,123456
-		//LoginModel::logout();
+
 		$rs=Array();
 		$lm=LoginModel::getLoginModel();
 		
@@ -530,14 +519,11 @@ class OPACSearchController extends AbstractActionController
 			
 			$ch = curl_init();
 			// 2. 设置选项，包括URL
-			//curl_setopt($ch, CURLOPT_URL, "http://192.168.4.152:82/cgi-win/s3trs.exe");
 			curl_setopt($ch, CURLOPT_URL, "http://192.168.4.152:82/cgi-win/service.exe");
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			curl_setopt($ch, CURLOPT_POST, 1);
 			$curlPost = 'cardno='.urlencode($un).'&pass='.urlencode($pw).'&uname=&newpass1=&newpass2=&query=query';
-			//$curlPost = 'cardno='.$un.'&pass='.$pw.'&uname=&newpass1=&newpass2=&query=query';
-			//cardno=J00425&pass=104673317&uname=&newpass1=&newpass2=&query=query
 			curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
 			// 3. 执行并获取HTML文档内容
 			$output = curl_exec($ch);

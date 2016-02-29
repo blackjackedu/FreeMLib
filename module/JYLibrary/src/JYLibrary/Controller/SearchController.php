@@ -519,19 +519,13 @@ class SearchController extends AbstractActionController
 			echo '未登录';
 			exit();
 		}
-		//$un='J00425';
-		//$pw='104673317';
-		//tang A209798,123456
 		$ch = curl_init();
 		// 2. 设置选项，包括URL
-		//curl_setopt($ch, CURLOPT_URL, "http://192.168.4.152:82/cgi-win/s3trs.exe");
 		curl_setopt($ch, CURLOPT_URL, "http://192.168.4.152:82/cgi-win/service.exe");
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_HEADER, 0);
 		curl_setopt($ch, CURLOPT_POST, 1);
 		$curlPost = 'cardno='.urlencode($un).'&pass='.urlencode($pw).'&uname=&newpass1=&newpass2=&query=query';
-		//$curlPost = 'cardno='.$un.'&pass='.$pw.'&uname=&newpass1=&newpass2=&query=query';
-		//cardno=J00425&pass=104673317&uname=&newpass1=&newpass2=&query=query
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $curlPost);
 		// 3. 执行并获取HTML文档内容
 		$output = curl_exec($ch);
